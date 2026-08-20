@@ -1,0 +1,6 @@
+{
+  "name": "AgriSaaS",
+  "description": "Multi-enterprise farm management system for Dairy, Poultry, and Aquaculture in South Asia.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
