@@ -3,9 +3,9 @@ import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useFarm } from '../../context/FarmContext';
 import { useAuth } from '../../context/AuthContext';
-import { LayoutDashboard, Milk, Bird, Fish, BookOpenCheck, CreditCard, Sparkles, ChevronRight, Users, ShoppingBag, Stethoscope, Tractor } from 'lucide-react';
+import { LayoutDashboard, Milk, Bird, Fish, BookOpenCheck, CreditCard, Sparkles, ChevronRight, Users, ShoppingBag, Stethoscope, Tractor, Sprout } from 'lucide-react';
 
-export type NavTab = 'dashboard' | 'farms' | 'dairy' | 'poultry' | 'fish' | 'khata' | 'staff' | 'marketplace' | 'health' | 'subscriptions';
+export type NavTab = 'dashboard' | 'farms' | 'crops' | 'dairy' | 'poultry' | 'fish' | 'khata' | 'staff' | 'marketplace' | 'health' | 'subscriptions';
 
 interface SidebarProps {
   currentTab: NavTab;
@@ -15,12 +15,19 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab, onOpenUpgrade }) => {
   const { t } = useLanguage();
-  const { farm, quotas } = useFarm();
+  const { farm, quotas, metrics } = useFarm();
   const { currentPlan } = useAuth();
 
   const navItems = [
     { id: 'dashboard' as NavTab, label: t('dashboard'), icon: LayoutDashboard, visible: true },
     { id: 'farms' as NavTab, label: 'Farm Estates', icon: Tractor, visible: true },
+    { 
+      id: 'crops' as NavTab, 
+      label: 'Crops & B2B Sales', 
+      icon: Sprout, 
+      visible: true,
+      quota: `${metrics.totalCropAcres} ac`
+    },
     { 
       id: 'dairy' as NavTab, 
       label: t('dairy'), 

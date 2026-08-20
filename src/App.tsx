@@ -9,6 +9,7 @@ import { Sidebar, NavTab } from './components/layout/Sidebar';
 import { MobileNav } from './components/layout/MobileNav';
 import { MasterDashboard } from './components/dashboard/MasterDashboard';
 import { FarmList } from './components/farms/FarmList';
+import { CropDashboard } from './components/crops/CropDashboard';
 import { DairyModule } from './components/dairy/DairyModule';
 import { PoultryModule } from './components/poultry/PoultryModule';
 import { FishModule } from './components/fish/FishModule';
@@ -133,6 +134,10 @@ function AppContent() {
 
             {currentFarmerTab === 'farms' && (
               <FarmList />
+            )}
+
+            {currentFarmerTab === 'crops' && (
+              <CropDashboard onNavigateToMarketplace={() => setCurrentFarmerTab('marketplace')} />
             )}
 
             {currentFarmerTab === 'dairy' && (

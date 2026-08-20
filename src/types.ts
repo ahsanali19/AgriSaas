@@ -1,8 +1,8 @@
 // src/types.ts
 
-export type FarmType = 'dairy' | 'poultry' | 'fish' | 'mixed';
+export type FarmType = 'dairy' | 'poultry' | 'fish' | 'crops' | 'mixed';
 
-export type EnterpriseType = 'general' | 'dairy' | 'poultry' | 'fish';
+export type EnterpriseType = 'general' | 'dairy' | 'poultry' | 'fish' | 'crops';
 
 export type LanguageCode = 'en' | 'ur' | 'hi';
 
@@ -213,7 +213,7 @@ export interface SalaryAdvance {
 export interface MarketplaceListing {
   id: number;
   title: string;
-  category: 'dairy_cattle' | 'poultry_birds' | 'fish_seed' | 'feed_silage' | 'machinery';
+  category: 'crops_harvest' | 'dairy_cattle' | 'poultry_birds' | 'fish_seed' | 'feed_silage' | 'machinery';
   price: number;
   currency: string;
   quantity: string;
@@ -238,4 +238,77 @@ export interface HealthRecord {
   aiPreliminaryDiagnosis?: string;
   aiSuggestedTreatment?: string;
 }
+
+// Crop Lifecycle & Inventory Interfaces
+export type CropExpenseCategory = 'Seed' | 'Fertilizer' | 'Pesticide' | 'Tractor' | 'Labor' | 'Irrigation' | 'Other';
+
+export interface Crop {
+  id: number;
+  userId: number;
+  farmId: number;
+  cropName: string;
+  variety?: string;
+  landAreaAcres: number;
+  sowingDate: string;
+  expectedHarvestDate: string;
+  status: 'sowing' | 'vegetative' | 'flowering' | 'harvest_ready' | 'harvested';
+  notes?: string;
+}
+
+export interface CropExpense {
+  id: number;
+  cropId: number;
+  cropName?: string;
+  category: CropExpenseCategory;
+  amount: number;
+  date: string;
+  description?: string;
+}
+
+export interface CropInventory {
+  id: number;
+  userId: number;
+  cropId: number;
+  cropName: string;
+  totalYieldKg: number;
+  availableQuantity: number;
+  storageLocation?: string;
+  harvestDate?: string;
+  isListedOnMarketplace?: boolean;
+}
+
+export interface WarehouseInventory {
+  id: number;
+  userId: number;
+  cropId: number;
+  cropName: string;
+  totalYieldKg: number;
+  storedQuantity: number;
+  storageLocation: string;
+  packagingUnit?: 'kg' | 'maunds' | 'metric_ton' | 'bags';
+  lastUpdated?: string;
+}
+
+export interface B2BSale {
+  id: number;
+  userId: number;
+  cropId: number;
+  cropName: string;
+  buyerName: string;
+  buyerType?: 'sugar_mill' | 'commission_agent' | 'wholesaler' | 'exporter' | 'feed_mill' | 'other';
+  vehicleNumber?: string;
+  vehicleWeightSlip: string;
+  grossWeightKg?: number;
+  tareWeightKg?: number;
+  totalWeight: number;
+  weightUnit?: 'kg' | 'maunds' | 'metric_ton';
+  ratePerUnit: number;
+  grossAmount: number;
+  commissionDeduction: number;
+  taxDeduction?: number;
+  netPayable: number;
+  paymentStatus: 'paid' | 'pending' | 'partially_paid';
+  saleDate: string;
+}
+
 

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useFarm } from '../../context/FarmContext';
 import { HealthRecord } from '../../types';
+import { VoiceInput } from '../common/VoiceInput';
 import {
   Stethoscope,
   Sparkles,
@@ -267,20 +268,18 @@ export const HealthAssistant: React.FC = () => {
               </div>
             </div>
 
-            {/* Detailed Symptoms Textarea */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Describe Clinical Symptoms & Onset Time *
-              </label>
-              <textarea
-                rows={4}
-                required
-                placeholder="Describe fever readings, appetite, milk consistency, breathing sounds, stool color, or mortality count..."
-                value={symptoms}
-                onChange={(e) => setSymptoms(e.target.value)}
-                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white leading-relaxed"
-              />
-            </div>
+            {/* Detailed Symptoms Textarea with Voice Recognition */}
+            <VoiceInput
+              id="clinical-symptoms-input"
+              isTextArea
+              rows={4}
+              required
+              label="Describe Clinical Symptoms & Onset Time (Speak or Type) *"
+              placeholder="Describe fever readings, appetite, milk consistency, breathing sounds, or click the mic and speak in Urdu/English..."
+              value={symptoms}
+              onChange={(e) => setSymptoms(e.target.value)}
+              hint="🎙️ Farmers can tap the microphone to describe symptoms by voice in Urdu, English, or Hindi."
+            />
 
             {/* Submit Button */}
             <button

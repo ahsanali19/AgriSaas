@@ -83,10 +83,9 @@ const INITIAL_LISTINGS: MarketplaceListing[] = [
 ];
 
 export const Marketplace: React.FC = () => {
-  const { farm } = useFarm();
+  const { farm, marketplaceListings, addMarketplaceListing } = useFarm();
   const symbol = farm.currency === 'INR' ? '₹' : '₨';
 
-  const [listings, setListings] = useState<MarketplaceListing[]>(INITIAL_LISTINGS);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showPostModal, setShowPostModal] = useState(false);
@@ -94,13 +93,13 @@ export const Marketplace: React.FC = () => {
   // New Listing Form State
   const [newListing, setNewListing] = useState({
     title: '',
-    category: 'dairy_cattle' as MarketplaceListing['category'],
+    category: 'crops_harvest' as MarketplaceListing['category'],
     price: 50000,
     quantity: '1 Unit',
     sellerName: farm.name || 'Local Farmer',
     sellerPhone: '+923001234567',
     locationDistrict: farm.locationDistrict || 'Punjab',
-    imageUrl: 'https://images.unsplash.com/photo-1546445317-29f4545e9d53?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
     description: ''
   });
 
@@ -108,8 +107,7 @@ export const Marketplace: React.FC = () => {
     e.preventDefault();
     if (!newListing.title || !newListing.sellerPhone) return;
 
-    const created: MarketplaceListing = {
-      id: Date.now(),
+    addMarketplaceListing({
       title: newListing.title,
       category: newListing.category,
       price: Number(newListing.price),
@@ -120,27 +118,26 @@ export const Marketplace: React.FC = () => {
       locationDistrict: newListing.locationDistrict,
       imageUrl: newListing.imageUrl,
       description: newListing.description || 'Verified farm listing from AgriSaaS platform.',
-      postedDate: new Date().toISOString().split('T')[0],
       isVerifiedFarmer: true
-    };
+    });
 
-    setListings([created, ...listings]);
     setShowPostModal(false);
     setNewListing({
       title: '',
-      category: 'dairy_cattle',
+      category: 'crops_harvest',
       price: 50000,
       quantity: '1 Unit',
       sellerName: farm.name || 'Local Farmer',
       sellerPhone: '+923001234567',
       locationDistrict: farm.locationDistrict || 'Punjab',
-      imageUrl: 'https://images.unsplash.com/photo-1546445317-29f4545e9d53?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+      imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
       description: ''
     });
   };
 
   const categories = [
     { id: 'all', label: 'All Items', icon: '🌾' },
+    { id: 'crops_harvest', label: 'Harvested Crops & Grains', icon: '🌾' },
     { id: 'dairy_cattle', label: 'Dairy Cattle & Buffs', icon: '🐄' },
     { id: 'poultry_birds', label: 'Poultry Chicks & Flocks', icon: '🐔' },
     { id: 'fish_seed', label: 'Fish Seed & Fingerlings', icon: '🐟' },
@@ -148,7 +145,7 @@ export const Marketplace: React.FC = () => {
     { id: 'machinery', label: 'Tractors & Equipment', icon: '🚜' },
   ];
 
-  const filteredListings = listings.filter(item => {
+  const filteredListings = marketplaceListings.filter(item => {
     const matchesCat = selectedCategory === 'all' || item.category === selectedCategory;
     const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
