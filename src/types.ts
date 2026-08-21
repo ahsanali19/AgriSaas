@@ -311,4 +311,52 @@ export interface B2BSale {
   saleDate: string;
 }
 
+// =============================================================================
+// B2B Monetization Engine: Buyers, Marketplace Leads & Agri-Sponsorships
+// =============================================================================
+
+export type BuyerSubscriptionStatus = 'active' | 'expired' | 'pay_as_you_go' | 'enterprise_tier';
+
+export interface Buyer {
+  id: number;
+  mobile: string;
+  name: string;
+  company: string;
+  buyerSubscriptionStatus: BuyerSubscriptionStatus;
+  walletBalance: number; // in PKR / Rs.
+  totalLeadsUnlocked?: number;
+  createdAt?: string;
+}
+
+export type LeadStatus = 'locked' | 'unlocked';
+
+export interface MarketplaceLead {
+  id: number;
+  listingId: number;
+  buyerId: number;
+  farmerId: number;
+  status: LeadStatus;
+  unlockFee: number; // e.g. 100 PKR
+  createdAt: string;
+  unlockedAt?: string;
+  farmerPhoneRevealed?: string;
+}
+
+export type PlacementArea = 'dashboard_top' | 'marketplace_sidebar' | 'crops_footer' | 'ledger_top';
+
+export interface SponsorshipBanner {
+  id: number;
+  sponsorName: string;
+  imageUrl: string;
+  placementArea: PlacementArea;
+  link: string;
+  status: 'active' | 'inactive';
+  tagline?: string;
+  badgeText?: string;
+  ctaText?: string;
+  impressionsCount?: number;
+  clicksCount?: number;
+  createdAt?: string;
+}
+
 

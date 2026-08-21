@@ -1,2 +1,2 @@
 // src/components/marketplace/Marketplace.jsx
-export { Marketplace, default } from './Marketplace.tsx';
+export { Marketplace as default, Marketplace } from './Marketplace.tsx';

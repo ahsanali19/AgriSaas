@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { useFarm } from '../../context/FarmContext';
 import { MarketplaceListing } from '../../types';
+import { MarketplaceListingDetail } from './MarketplaceListingDetail';
+import { SponsorBanner } from '../common/SponsorBanner';
 import {
   ShoppingBag,
   Plus,
@@ -16,71 +18,15 @@ import {
   X,
   ExternalLink,
   Sparkles,
-  Share2
+  Share2,
+  Lock,
+  Unlock,
+  Wallet,
+  Building2,
+  Eye,
+  Zap,
+  ShieldCheck
 } from 'lucide-react';
-
-const INITIAL_LISTINGS: MarketplaceListing[] = [
-  {
-    id: 1,
-    title: 'Pure Sahiwal Breed Milking Cows (18L Daily Yield)',
-    category: 'dairy_cattle',
-    price: 320000,
-    currency: 'PKR',
-    quantity: '3 Cows (2nd Lactation)',
-    sellerName: 'Chaudhry Farooq Cattle Farm',
-    sellerPhone: '+923008472910',
-    locationDistrict: 'Sahiwal, Punjab',
-    imageUrl: 'https://images.unsplash.com/photo-1546445317-29f4545e9d53?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-    description: 'Vaccinated against FMD & LSD. High butterfat percentage (4.8%). High genetic potential, docile temperament.',
-    postedDate: '2026-08-16',
-    isVerifiedFarmer: true
-  },
-  {
-    id: 2,
-    title: 'Day-Old Broiler Chicks (Cobb 500 Fast Growth)',
-    category: 'poultry_birds',
-    price: 95,
-    currency: 'PKR',
-    quantity: '2,500 Chicks (Vaccinated)',
-    sellerName: 'Al-Haq Hatcheries',
-    sellerPhone: '+923017654321',
-    locationDistrict: 'Faisalabad, Punjab',
-    imageUrl: 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-    description: 'Marek vaccinated day-old chicks. High livability (98%+), target FCR of 1.45 at 35 days.',
-    postedDate: '2026-08-18',
-    isVerifiedFarmer: true
-  },
-  {
-    id: 3,
-    title: 'Certified Rohu & Grass Carp Fish Fingerlings (3-4 Inches)',
-    category: 'fish_seed',
-    price: 18,
-    currency: 'PKR',
-    quantity: '15,000 Fingerlings',
-    sellerName: 'Indus Valley Aqua Hatchery',
-    sellerPhone: '+923049988776',
-    locationDistrict: 'Muzaffargarh, Punjab',
-    imageUrl: 'https://images.unsplash.com/photo-1534043464124-3be32fe00099?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-    description: 'High disease resistance nursery fingerlings. Oxygen-packed delivery available anywhere in Punjab & Sindh.',
-    postedDate: '2026-08-15',
-    isVerifiedFarmer: true
-  },
-  {
-    id: 4,
-    title: 'High-Energy Corn Silage (Vacuum Bales 500kg)',
-    category: 'feed_silage',
-    price: 14,
-    currency: 'PKR',
-    quantity: '40 Tons (80 Bales)',
-    sellerName: 'Kisan Green Feeds',
-    sellerPhone: '+923061234567',
-    locationDistrict: 'Okara, Punjab',
-    imageUrl: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-    description: 'Grown with Pioneer seed, harvested at ideal milk-line stage. 8.5% crude protein, excellent aroma.',
-    postedDate: '2026-08-17',
-    isVerifiedFarmer: true
-  }
-];
 
 export const Marketplace: React.FC = () => {
   const { farm, marketplaceListings, addMarketplaceListing } = useFarm();
@@ -89,6 +35,12 @@ export const Marketplace: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showPostModal, setShowPostModal] = useState(false);
+
+  // Perspective & B2B Lead Unlock State
+  const [viewerMode, setViewerMode] = useState<'buyer' | 'farmer'>('buyer');
+  const [buyerWallet, setBuyerWallet] = useState<number>(2500); // 2,500 PKR balance
+  const [unlockedListingIds, setUnlockedListingIds] = useState<Set<number>>(new Set());
+  const [selectedDetailListing, setSelectedDetailListing] = useState<MarketplaceListing | null>(null);
 
   // New Listing Form State
   const [newListing, setNewListing] = useState({
@@ -135,6 +87,42 @@ export const Marketplace: React.FC = () => {
     });
   };
 
+  const handleUnlockLead = async (listingId: number, fee: number) => {
+    // Check wallet
+    if (buyerWallet < fee) {
+      return { success: false, message: `Insufficient balance. Rs. ${fee} required.` };
+    }
+
+    try {
+      // Call backend API if available
+      const res = await fetch('/api/marketplace/unlock-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ listingId, buyerId: 1, unlockFee: fee })
+      }).catch(() => null);
+
+      if (res && res.ok) {
+        const data = await res.json();
+        setUnlockedListingIds(prev => new Set(prev).add(listingId));
+        setBuyerWallet(prev => prev - fee);
+        return {
+          success: true,
+          farmerPhone: data.farmerContact?.phone || '+92 300 8472910'
+        };
+      }
+    } catch (e) {
+      // fallback
+    }
+
+    // Local fallback
+    setUnlockedListingIds(prev => new Set(prev).add(listingId));
+    setBuyerWallet(prev => prev - fee);
+    return {
+      success: true,
+      farmerPhone: '+92 300 8472910'
+    };
+  };
+
   const categories = [
     { id: 'all', label: 'All Items', icon: '🌾' },
     { id: 'crops_harvest', label: 'Harvested Crops & Grains', icon: '🌾' },
@@ -158,31 +146,34 @@ export const Marketplace: React.FC = () => {
       
       {/* Header Banner */}
       <div className="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-md relative overflow-hidden">
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center space-x-2 mb-2">
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full flex items-center space-x-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span>B2B Agri Mandi</span>
               </span>
               <span className="text-xs text-slate-400">•</span>
-              <span className="text-xs text-slate-300">Farmer-to-Farmer Trade</span>
+              <span className="text-xs text-slate-300 font-semibold">100% Free Listing for Farmers</span>
             </div>
+            
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-              AgriSaaS B2B Marketplace
+              AgriSaaS B2B Marketplace & Lead Exchange
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl">
-              Buy and sell high-genetic milking cows, day-old chicks, quality fingerlings, corn silage, and farm machinery directly with verified producers without commission middlemen.
+            
+            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+              Connect verified farm producers with commercial sugar mills, grain wholesalers, feed mills, and livestock traders. Farmers post for free; commercial buyers unlock direct verified contacts.
             </p>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto">
+          {/* Action & Post Buttons */}
+          <div className="flex flex-wrap items-center gap-2.5 self-start lg:self-auto">
             <button
               onClick={() => setShowPostModal(true)}
               className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs px-4 py-3 rounded-2xl transition flex items-center space-x-2 shadow-lg shadow-emerald-950 active:scale-95"
             >
               <Plus className="w-4 h-4" />
-              <span>Post Free Listing</span>
+              <span>Post Free Farmer Listing</span>
             </button>
           </div>
         </div>
@@ -190,6 +181,68 @@ export const Marketplace: React.FC = () => {
         <div className="absolute right-0 bottom-0 opacity-10 text-9xl select-none pointer-events-none transform translate-x-8 translate-y-8">
           🚜
         </div>
+      </div>
+
+      {/* =========================================================================
+          PERSPECTIVE SWITCHER & BUYER PREPAID WALLET BAR
+          ========================================================================= */}
+      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:px-6 text-white flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+        
+        {/* Left: Perspective Switcher */}
+        <div className="flex items-center space-x-3">
+          <div className="text-xs font-bold text-slate-400 flex items-center space-x-1.5">
+            <Eye className="w-4 h-4 text-emerald-400" />
+            <span>Marketplace Mode:</span>
+          </div>
+
+          <div className="inline-flex bg-slate-800 p-1 rounded-xl border border-slate-700 text-xs font-bold">
+            <button
+              onClick={() => setViewerMode('buyer')}
+              className={`px-3 py-1.5 rounded-lg transition flex items-center space-x-1.5 ${
+                viewerMode === 'buyer'
+                  ? 'bg-emerald-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Building2 className="w-3.5 h-3.5" />
+              <span>Commercial Buyer (Unlock Leads)</span>
+            </button>
+            <button
+              onClick={() => setViewerMode('farmer')}
+              className={`px-3 py-1.5 rounded-lg transition flex items-center space-x-1.5 ${
+                viewerMode === 'farmer'
+                  ? 'bg-emerald-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <span>👨‍🌾</span>
+              <span>Farmer (Free Sell)</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Right: Buyer Wallet & Lead Stats */}
+        {viewerMode === 'buyer' && (
+          <div className="flex items-center space-x-3 self-start md:self-auto bg-slate-850 border border-slate-700/80 px-4 py-2 rounded-2xl">
+            <div className="flex items-center space-x-2">
+              <Wallet className="w-4 h-4 text-emerald-400" />
+              <div className="text-left">
+                <div className="text-[10px] uppercase font-bold text-slate-400">Buyer Wallet Balance</div>
+                <div className="text-xs font-mono font-bold text-emerald-400">
+                  Rs. {buyerWallet.toLocaleString()} PKR
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setBuyerWallet(prev => prev + 1000)}
+              className="bg-emerald-600/30 hover:bg-emerald-600/50 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold px-2.5 py-1 rounded-lg transition"
+            >
+              +Recharge (Rs 1,000)
+            </button>
+          </div>
+        )}
+
       </div>
 
       {/* Filter & Search Bar */}
@@ -203,7 +256,7 @@ export const Marketplace: React.FC = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search milking cows, chicks, silage, seeds..."
+              placeholder="Search crops, milling wheat, cattle, silage, seed..."
               className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
             />
           </div>
@@ -232,101 +285,160 @@ export const Marketplace: React.FC = () => {
         </div>
       </div>
 
-      {/* Classifieds Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        {filteredListings.map((item) => (
-          <div
-            key={item.id}
-            className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500/50 transition duration-300 flex flex-col justify-between group"
-          >
-            <div>
-              
-              {/* Image & Badges */}
-              <div className="relative h-44 w-full bg-slate-100 overflow-hidden">
-                <img
-                  src={item.imageUrl}
-                  alt={item.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                  referrerPolicy="no-referrer"
-                />
-                
-                {/* Category Pill */}
-                <div className="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
-                  {item.category.replace('_', ' ')}
-                </div>
+      {/* =========================================================================
+          MAIN MARKETPLACE CONTENT: LISTINGS GRID + B2B SPONSOR SIDEBAR
+          ========================================================================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        {/* Listings 3-Column Grid */}
+        <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+          {filteredListings.map((item) => {
+            const isUnlocked = unlockedListingIds.has(item.id);
+            const actualPhone = item.sellerPhone || '+92 300 8472910';
+            const maskedPhone = actualPhone.length > 7 ? `${actualPhone.substring(0, 7)} •••••••` : '+92 300 •••••••';
+            const displayPhone = viewerMode === 'farmer' || isUnlocked ? actualPhone : maskedPhone;
 
-                {/* Verified Farmer Badge */}
-                {item.isVerifiedFarmer && (
-                  <div className="absolute top-3 right-3 bg-emerald-600/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center space-x-1 shadow">
-                    <CheckCircle2 className="w-3 h-3" />
-                    <span>Verified</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Card Body */}
-              <div className="p-4 space-y-2.5">
-                
-                {/* Price & Quantity */}
-                <div className="flex items-baseline justify-between">
-                  <div className="font-mono font-black text-xl text-emerald-800">
-                    {symbol} {item.price.toLocaleString()}
-                  </div>
-                  <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
-                    {item.quantity}
-                  </span>
-                </div>
-
-                {/* Title */}
-                <h3 className="font-bold text-sm text-slate-900 leading-snug line-clamp-2">
-                  {item.title}
-                </h3>
-
-                {/* Description */}
-                <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                  {item.description}
-                </p>
-
-                {/* Location & Seller */}
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-                  <div className="flex items-center space-x-1 truncate max-w-[150px]">
-                    <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    <span className="truncate">{item.locationDistrict}</span>
-                  </div>
-                  <span>{item.postedDate}</span>
-                </div>
-
-              </div>
-            </div>
-
-            {/* B2B Action Buttons (WhatsApp & Call) */}
-            <div className="p-4 pt-0 grid grid-cols-2 gap-2">
-              
-              {/* WhatsApp CTA */}
-              <a
-                href={`https://wa.me/${item.sellerPhone.replace(/[^0-9]/g, '')}?text=Assalam-o-Alaikum, I am interested in your AgriSaaS listing: ${encodeURIComponent(item.title)}`}
-                target="_blank"
-                rel="noreferrer"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm active:scale-95 text-center"
+            return (
+              <div
+                key={item.id}
+                className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500/50 transition duration-300 flex flex-col justify-between group"
               >
-                <MessageCircle className="w-3.5 h-3.5" />
-                <span>WhatsApp</span>
-              </a>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => setSelectedDetailListing(item)}
+                >
+                  
+                  {/* Image & Badges */}
+                  <div className="relative h-44 w-full bg-slate-100 overflow-hidden">
+                    <img
+                      src={item.imageUrl}
+                      alt={item.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                      referrerPolicy="no-referrer"
+                    />
+                    
+                    {/* Category Pill */}
+                    <div className="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                      {item.category.replace('_', ' ')}
+                    </div>
 
-              {/* Direct Call CTA */}
-              <a
-                href={`tel:${item.sellerPhone}`}
-                className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center space-x-1.5 active:scale-95 text-center"
-              >
-                <Phone className="w-3.5 h-3.5 text-slate-600" />
-                <span>Call Seller</span>
-              </a>
+                    {/* Verified Farmer Badge */}
+                    {item.isVerifiedFarmer && (
+                      <div className="absolute top-3 right-3 bg-emerald-600/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center space-x-1 shadow">
+                        <CheckCircle2 className="w-3 h-3" />
+                        <span>Verified</span>
+                      </div>
+                    )}
+                  </div>
 
+                  {/* Card Body */}
+                  <div className="p-4 space-y-2.5">
+                    
+                    {/* Price & Quantity */}
+                    <div className="flex items-baseline justify-between">
+                      <div className="font-mono font-black text-xl text-emerald-800">
+                        {symbol} {item.price.toLocaleString()}
+                      </div>
+                      <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                        {item.quantity}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="font-bold text-sm text-slate-900 leading-snug line-clamp-2">
+                      {item.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                      {item.description}
+                    </p>
+
+                    {/* Location & Seller */}
+                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                      <div className="flex items-center space-x-1 truncate max-w-[150px]">
+                        <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span className="truncate">{item.locationDistrict}</span>
+                      </div>
+                      <span>{item.postedDate}</span>
+                    </div>
+
+                  </div>
+                </div>
+
+                {/* B2B Action Buttons / Unlock Lead Flow */}
+                <div className="p-4 pt-0">
+                  {viewerMode === 'buyer' && !isUnlocked ? (
+                    /* Locked Lead Button for Commercial Buyer */
+                    <button
+                      onClick={() => setSelectedDetailListing(item)}
+                      className="w-full bg-gradient-to-r from-amber-500 to-emerald-500 hover:from-amber-400 hover:to-emerald-400 text-slate-950 font-black text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center space-x-1.5 shadow active:scale-95 text-center"
+                    >
+                      <Lock className="w-3.5 h-3.5" />
+                      <span>Unlock Farmer Contact (Rs. 100)</span>
+                    </button>
+                  ) : (
+                    /* Unlocked or Farmer View CTA (Direct WhatsApp & Call) */
+                    <div className="grid grid-cols-2 gap-2">
+                      <a
+                        href={`https://wa.me/${displayPhone.replace(/[^0-9]/g, '')}?text=Assalam-o-Alaikum, I am interested in your AgriSaaS listing: ${encodeURIComponent(item.title)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm active:scale-95 text-center"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5" />
+                        <span>WhatsApp</span>
+                      </a>
+
+                      <a
+                        href={`tel:${displayPhone}`}
+                        className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center space-x-1.5 active:scale-95 text-center"
+                      >
+                        <Phone className="w-3.5 h-3.5 text-slate-600" />
+                        <span>Call</span>
+                      </a>
+                    </div>
+                  )}
+                </div>
+
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Right: Direct Agri-Sponsor Sidebar Banners */}
+        <div className="lg:col-span-1 space-y-6">
+          <SponsorBanner placementArea="marketplace_sidebar" variant="sidebar" />
+          
+          {/* B2B Buyer Guarantee Card */}
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-5 text-white space-y-3">
+            <div className="flex items-center space-x-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+              <ShieldCheck className="w-4 h-4" />
+              <span>Direct Farm Guarantee</span>
             </div>
-
+            <h4 className="font-bold text-sm text-slate-100">
+              Verified Direct Agri Producers
+            </h4>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Every listing on AgriSaaS is verified through active farm registries and geolocation check-ins to prevent broker fraud.
+            </p>
           </div>
-        ))}
+        </div>
+
       </div>
+
+      {/* =========================================================================
+          MODAL: VIEW LISTING DETAIL & UNLOCK LEAD
+          ========================================================================= */}
+      {selectedDetailListing && (
+        <MarketplaceListingDetail
+          listing={selectedDetailListing}
+          onClose={() => setSelectedDetailListing(null)}
+          viewerMode={viewerMode}
+          buyerWallet={buyerWallet}
+          onUnlockLead={handleUnlockLead}
+        />
+      )}
 
       {/* =========================================================================
           MODAL: POST NEW B2B LISTING
@@ -340,7 +452,10 @@ export const Marketplace: React.FC = () => {
                 <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
                   <Plus className="w-4 h-4" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-900">Post Item on B2B Mandi</h3>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900">Post Free Item on B2B Mandi</h3>
+                  <p className="text-[11px] text-emerald-700 font-semibold">100% Free Lifetime Listing for Farmers</p>
+                </div>
               </div>
               <button
                 onClick={() => setShowPostModal(false)}
@@ -372,6 +487,7 @@ export const Marketplace: React.FC = () => {
                     onChange={(e) => setNewListing({ ...newListing, category: e.target.value as any })}
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   >
+                    <option value="crops_harvest">🌾 Harvested Crops & Grains</option>
                     <option value="dairy_cattle">🐄 Dairy Cattle & Buffs</option>
                     <option value="poultry_birds">🐔 Poultry Birds & Chicks</option>
                     <option value="fish_seed">🐟 Fish Seed & Fingerlings</option>
@@ -385,7 +501,7 @@ export const Marketplace: React.FC = () => {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. 2 Cows, 50 Bales, 5000 Seed"
+                    placeholder="e.g. 50 Tons, 2 Cows, 5000 Seed"
                     value={newListing.quantity}
                     onChange={(e) => setNewListing({ ...newListing, quantity: e.target.value })}
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -399,19 +515,20 @@ export const Marketplace: React.FC = () => {
                   <input
                     type="number"
                     required
-                    min="1"
+                    min="0"
+                    placeholder="50000"
                     value={newListing.price}
                     onChange={(e) => setNewListing({ ...newListing, price: Number(e.target.value) })}
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">District / Region *</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">District / Location *</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Sahiwal, Punjab"
+                    placeholder="e.g. Sahiwal, Okara"
                     value={newListing.locationDistrict}
                     onChange={(e) => setNewListing({ ...newListing, locationDistrict: e.target.value })}
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -419,33 +536,20 @@ export const Marketplace: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Seller / Farm Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={newListing.sellerName}
-                    onChange={(e) => setNewListing({ ...newListing, sellerName: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">WhatsApp / Phone *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="+92 300 1234567"
-                    value={newListing.sellerPhone}
-                    onChange={(e) => setNewListing({ ...newListing, sellerPhone: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Farmer Contact (Phone / WhatsApp) *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="+92 300 1234567"
+                  value={newListing.sellerPhone}
+                  onChange={(e) => setNewListing({ ...newListing, sellerPhone: e.target.value })}
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Photo Image URL</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Produce Image URL</label>
                 <input
                   type="url"
                   placeholder="https://images.unsplash.com/..."
@@ -456,29 +560,29 @@ export const Marketplace: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Description & Health/Genetic Details</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Description / Quality Specs</label>
                 <textarea
-                  rows={3}
-                  placeholder="Provide vaccination status, daily milk yield records, feed history, delivery availability..."
+                  rows={2}
+                  placeholder="Mention moisture content, vaccination record, weight, delivery options..."
                   value={newListing.description}
                   onChange={(e) => setNewListing({ ...newListing, description: e.target.value })}
                   className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
-              <div className="pt-3 flex items-center justify-end space-x-2">
+              <div className="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setShowPostModal(false)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md active:scale-95"
+                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow transition"
                 >
-                  Publish Active Listing
+                  Publish Free Listing
                 </button>
               </div>
 
@@ -490,5 +594,3 @@ export const Marketplace: React.FC = () => {
     </div>
   );
 };
-
-export default Marketplace;

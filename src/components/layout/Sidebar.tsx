@@ -92,25 +92,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab, onOpe
         })}
       </div>
 
-      {/* Free Tier Limit Warning Banner */}
-      {currentPlan.code === 'FREE' && (
-        <div className="bg-gradient-to-br from-slate-800 to-slate-850 border border-amber-500/30 p-3.5 rounded-2xl shadow-sm text-left">
-          <div className="flex items-center space-x-2 text-amber-400 font-bold text-xs">
-            <Sparkles className="w-4 h-4" />
-            <span>Free Tier Limits</span>
-          </div>
-          <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
-            10 Animals, 2 Flocks, 2 Ponds max. Upgrade for unlimited multi-farm expansion.
-          </p>
-          <button
-            onClick={onOpenUpgrade}
-            className="mt-2.5 w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs py-2 px-3 rounded-lg flex items-center justify-center space-x-1 transition"
-          >
-            <span>Upgrade to Pro</span>
-            <ChevronRight className="w-3.5 h-3.5" />
-          </button>
+      {/* 100% Free Lifetime Farmer SaaS Highlight */}
+      <div className="bg-gradient-to-br from-slate-800 to-emerald-950/60 border border-emerald-500/30 p-3.5 rounded-2xl shadow-sm text-left">
+        <div className="flex items-center space-x-2 text-emerald-400 font-bold text-xs">
+          <Sparkles className="w-4 h-4" />
+          <span>100% Free for Farmers</span>
         </div>
-      )}
+        <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+          Zero subscription fees. Unlimited livestock, flocks, ponds, crops & master khata unlocked.
+        </p>
+        <button
+          onClick={() => onSelectTab('marketplace')}
+          className="mt-2.5 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2 px-3 rounded-lg flex items-center justify-center space-x-1 transition shadow-sm"
+        >
+          <span>B2B Mandi Leads</span>
+          <ChevronRight className="w-3.5 h-3.5" />
+        </button>
+      </div>
     </aside>
   );
 };
