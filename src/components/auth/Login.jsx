@@ -1,2 +1,2 @@
 // src/components/auth/Login.jsx
-export { Login, default } from './Login.tsx';
+export { Login as default, Login } from './Login.tsx';

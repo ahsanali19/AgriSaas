@@ -86,10 +86,10 @@ export const Header: React.FC<HeaderProps> = ({
   // =========================================================================
   if (role === 'admin') {
     const adminNavLinks = [
-      { id: 'dashboard' as const, label: 'Platform Stats', icon: <LayoutDashboard className="w-4 h-4" /> },
-      { id: 'users' as const, label: 'Manage Tenants', icon: <Users className="w-4 h-4" /> },
-      { id: 'subscriptions' as const, label: 'PKR SaaS Revenue', icon: <Coins className="w-4 h-4" /> },
-      { id: 'audit' as const, label: 'Audit Trail', icon: <History className="w-4 h-4" /> }
+      { id: 'dashboard' as const, label: 'Monetization Hub', icon: <LayoutDashboard className="w-4 h-4" /> },
+      { id: 'users' as const, label: 'Manage Farmers & Buyers', icon: <Users className="w-4 h-4" /> },
+      { id: 'subscriptions' as const, label: 'B2B Revenue Stream', icon: <Coins className="w-4 h-4" /> },
+      { id: 'audit' as const, label: 'Security & Logs', icon: <History className="w-4 h-4" /> }
     ];
 
     return (
