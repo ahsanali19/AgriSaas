@@ -1,6 +1,6 @@
 {
   "name": "AgriSaaS",
   "description": "Multi-enterprise farm management system for Crops, Dairy, Poultry, and Aquaculture with integrated B2B Marketplace in South Asia.",
-  "requestFramePermissions": ["geolocation"],
+  "requestFramePermissions": ["geolocation", "camera"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

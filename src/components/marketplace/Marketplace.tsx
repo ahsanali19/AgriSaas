@@ -1,31 +1,26 @@
 // src/components/marketplace/Marketplace.tsx
 import React, { useState } from 'react';
 import { useFarm } from '../../context/FarmContext';
-import { MarketplaceListing } from '../../types';
+import { MarketplaceListing, ListingCategory } from '../../types';
 import { MarketplaceListingDetail } from './MarketplaceListingDetail';
+import { CreateAdModal } from './CreateAdModal';
 import { SponsorBanner } from '../common/SponsorBanner';
 import {
   ShoppingBag,
   Plus,
   Search,
-  Filter,
   MapPin,
   Phone,
   MessageCircle,
   Tag,
   CheckCircle2,
   Calendar,
-  X,
   ExternalLink,
   Sparkles,
-  Share2,
-  Lock,
-  Unlock,
-  Wallet,
-  Building2,
-  Eye,
   Zap,
-  ShieldCheck
+  ShieldCheck,
+  Eye,
+  Camera
 } from 'lucide-react';
 
 interface MarketplaceProps {
@@ -33,99 +28,13 @@ interface MarketplaceProps {
 }
 
 export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) => {
-  const { farm, marketplaceListings, addMarketplaceListing } = useFarm();
+  const { farm, marketplaceListings } = useFarm();
   const symbol = farm.currency === 'INR' ? '₹' : '₨';
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [showPostModal, setShowPostModal] = useState(false);
-
-  // Perspective & B2B Lead Unlock State
-  const [viewerMode, setViewerMode] = useState<'buyer' | 'farmer'>('buyer');
-  const [buyerWallet, setBuyerWallet] = useState<number>(2500); // 2,500 PKR balance
-  const [unlockedListingIds, setUnlockedListingIds] = useState<Set<number>>(new Set());
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedDetailListing, setSelectedDetailListing] = useState<MarketplaceListing | null>(null);
-
-  // New Listing Form State
-  const [newListing, setNewListing] = useState({
-    title: '',
-    category: 'crops_harvest' as MarketplaceListing['category'],
-    price: 50000,
-    quantity: '1 Unit',
-    sellerName: farm.name || 'Local Farmer',
-    sellerPhone: '+923001234567',
-    locationDistrict: farm.locationDistrict || 'Punjab',
-    imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-    description: ''
-  });
-
-  const handleCreateListing = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newListing.title || !newListing.sellerPhone) return;
-
-    addMarketplaceListing({
-      title: newListing.title,
-      category: newListing.category,
-      price: Number(newListing.price),
-      currency: farm.currency || 'PKR',
-      quantity: newListing.quantity,
-      sellerName: newListing.sellerName,
-      sellerPhone: newListing.sellerPhone,
-      locationDistrict: newListing.locationDistrict,
-      imageUrl: newListing.imageUrl,
-      description: newListing.description || 'Verified farm listing from AgriSaaS platform.',
-      isVerifiedFarmer: true
-    });
-
-    setShowPostModal(false);
-    setNewListing({
-      title: '',
-      category: 'crops_harvest',
-      price: 50000,
-      quantity: '1 Unit',
-      sellerName: farm.name || 'Local Farmer',
-      sellerPhone: '+923001234567',
-      locationDistrict: farm.locationDistrict || 'Punjab',
-      imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-      description: ''
-    });
-  };
-
-  const handleUnlockLead = async (listingId: number, fee: number) => {
-    // Check wallet
-    if (buyerWallet < fee) {
-      return { success: false, message: `Insufficient balance. Rs. ${fee} required.` };
-    }
-
-    try {
-      // Call backend API if available
-      const res = await fetch('/api/marketplace/unlock-lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ listingId, buyerId: 1, unlockFee: fee })
-      }).catch(() => null);
-
-      if (res && res.ok) {
-        const data = await res.json();
-        setUnlockedListingIds(prev => new Set(prev).add(listingId));
-        setBuyerWallet(prev => prev - fee);
-        return {
-          success: true,
-          farmerPhone: data.farmerContact?.phone || '+92 300 8472910'
-        };
-      }
-    } catch (e) {
-      // fallback
-    }
-
-    // Local fallback
-    setUnlockedListingIds(prev => new Set(prev).add(listingId));
-    setBuyerWallet(prev => prev - fee);
-    return {
-      success: true,
-      farmerPhone: '+92 300 8472910'
-    };
-  };
 
   const categories = [
     { id: 'all', label: 'All Items', icon: '🌾' },
@@ -155,16 +64,21 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) =
             🚜
           </div>
           <div className="min-w-0">
-            <h1 className="text-base font-bold text-white tracking-tight truncate">
-              AgriSaaS B2B Marketplace Mandi
-            </h1>
-            <p className="text-xs text-slate-400 truncate">
-              Free listings for farmers • Verified buyer lead unlock
+            <div className="flex items-center space-x-2">
+              <h1 className="text-base font-bold text-white tracking-tight truncate">
+                AgriSaaS B2B Mandi
+              </h1>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+                100% Free For Everyone
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 truncate mt-0.5">
+              Direct Phone & WhatsApp • Zero Buyer Fees • Unlimited Free Listings
             </p>
           </div>
         </div>
 
-        {/* Action & Post Buttons */}
+        {/* Action Buttons */}
         <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
           {onNavigateToMyAds && (
             <button
@@ -177,79 +91,40 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) =
           )}
 
           <button
-            onClick={() => setShowPostModal(true)}
-            className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl transition flex items-center space-x-1.5 active:scale-95"
+            onClick={() => setShowCreateModal(true)}
+            className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl transition flex items-center space-x-1.5 shadow-sm active:scale-95"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Camera className="w-3.5 h-3.5" />
             <span>Post Ad (Free)</span>
           </button>
         </div>
       </div>
 
-      {/* =========================================================================
-          PERSPECTIVE SWITCHER & BUYER PREPAID WALLET BAR (Compact)
-          ========================================================================= */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-2.5 sm:p-3 text-slate-900 flex flex-col md:flex-row md:items-center justify-between gap-2.5 shadow-sm">
-        
-        {/* Left: Perspective Switcher */}
+      {/* 100% Free Open Marketplace Guarantee Banner */}
+      <div className="bg-emerald-50/80 border border-emerald-200/90 rounded-2xl p-3 sm:p-3.5 text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs shadow-sm">
         <div className="flex items-center space-x-2">
-          <div className="text-xs font-bold text-slate-500 flex items-center space-x-1">
-            <Eye className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Mode:</span>
+          <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
+            ✓
           </div>
-
-          <div className="inline-flex bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-semibold">
-            <button
-              onClick={() => setViewerMode('buyer')}
-              className={`px-2.5 py-1 rounded-md transition flex items-center space-x-1 ${
-                viewerMode === 'buyer'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Building2 className="w-3 h-3" />
-              <span>Buyer Mode</span>
-            </button>
-            <button
-              onClick={() => setViewerMode('farmer')}
-              className={`px-2.5 py-1 rounded-md transition flex items-center space-x-1 ${
-                viewerMode === 'farmer'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <span>👨‍🌾</span>
-              <span>Farmer (Free Sell)</span>
-            </button>
+          <div>
+            <span className="font-bold text-emerald-900">Zero Middleman Commission: </span>
+            <span className="text-emerald-800">
+              Farmers post unlimited ads with camera photos; commercial buyers view phone & WhatsApp instantly for free.
+            </span>
           </div>
         </div>
 
-        {/* Right: Buyer Wallet & Lead Stats */}
-        {viewerMode === 'buyer' && (
-          <div className="flex items-center space-x-3 self-start md:self-auto bg-slate-850 border border-slate-700/80 px-4 py-2 rounded-2xl">
-            <div className="flex items-center space-x-2">
-              <Wallet className="w-4 h-4 text-emerald-400" />
-              <div className="text-left">
-                <div className="text-[10px] uppercase font-bold text-slate-400">Buyer Wallet Balance</div>
-                <div className="text-xs font-mono font-bold text-emerald-400">
-                  Rs. {buyerWallet.toLocaleString()} PKR
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setBuyerWallet(prev => prev + 1000)}
-              className="bg-emerald-600/30 hover:bg-emerald-600/50 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold px-2.5 py-1 rounded-lg transition"
-            >
-              +Recharge (Rs 1,000)
-            </button>
-          </div>
-        )}
-
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="self-start sm:self-auto bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[11px] px-3 py-1.5 rounded-lg transition shrink-0 flex items-center space-x-1"
+        >
+          <Plus className="w-3 h-3" />
+          <span>Upload Item</span>
+        </button>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200 shadow-sm space-y-4">
+      <div className="bg-white rounded-2xl p-3 sm:p-4 border border-slate-200 shadow-sm space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           
           {/* Search */}
@@ -259,8 +134,8 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) =
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search crops, milling wheat, cattle, silage, seed..."
-              className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
+              placeholder="Search crops, wheat, livestock, chicks, fish seed, tractors..."
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
             />
           </div>
 
@@ -275,7 +150,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) =
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl font-bold whitespace-nowrap transition ${
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg font-bold whitespace-nowrap transition ${
                 selectedCategory === cat.id
                   ? 'bg-emerald-700 text-white shadow-sm'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
@@ -291,20 +166,18 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) =
       {/* =========================================================================
           MAIN MARKETPLACE CONTENT: LISTINGS GRID + B2B SPONSOR SIDEBAR
           ========================================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
         
         {/* Listings 3-Column Grid */}
-        <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+        <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {filteredListings.map((item) => {
-            const isUnlocked = unlockedListingIds.has(item.id);
             const actualPhone = item.sellerPhone || '+92 300 8472910';
-            const maskedPhone = actualPhone.length > 7 ? `${actualPhone.substring(0, 7)} •••••••` : '+92 300 •••••••';
-            const displayPhone = viewerMode === 'farmer' || isUnlocked ? actualPhone : maskedPhone;
+            const cleanPhone = actualPhone.replace(/[^0-9]/g, '');
 
             return (
               <div
                 key={item.id}
-                className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500/50 transition duration-300 flex flex-col justify-between group"
+                className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500/50 transition duration-200 flex flex-col justify-between group"
               >
                 <div
                   className="cursor-pointer"
@@ -314,20 +187,20 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) =
                   {/* Image & Badges */}
                   <div className="relative h-44 w-full bg-slate-100 overflow-hidden">
                     <img
-                      src={item.imageUrl}
+                      src={item.imageUrl || 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'}
                       alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                       referrerPolicy="no-referrer"
                     />
                     
                     {/* Category Pill */}
-                    <div className="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                    <div className="absolute top-2.5 left-2.5 bg-slate-950/80 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
                       {item.category.replace('_', ' ')}
                     </div>
 
                     {/* Verified Farmer Badge */}
                     {item.isVerifiedFarmer && (
-                      <div className="absolute top-3 right-3 bg-emerald-600/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center space-x-1 shadow">
+                      <div className="absolute top-2.5 right-2.5 bg-emerald-600/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center space-x-1 shadow">
                         <CheckCircle2 className="w-3 h-3" />
                         <span>Verified</span>
                       </div>
@@ -335,14 +208,14 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) =
                   </div>
 
                   {/* Card Body */}
-                  <div className="p-4 space-y-2.5">
+                  <div className="p-3.5 space-y-2">
                     
                     {/* Price & Quantity */}
                     <div className="flex items-baseline justify-between">
-                      <div className="font-mono font-black text-xl text-emerald-800">
+                      <div className="font-mono font-black text-lg text-emerald-800">
                         {symbol} {item.price.toLocaleString()}
                       </div>
-                      <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                      <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
                         {item.quantity}
                       </span>
                     </div>
@@ -357,51 +230,39 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) =
                       {item.description}
                     </p>
 
-                    {/* Location & Seller */}
-                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-                      <div className="flex items-center space-x-1 truncate max-w-[150px]">
+                    {/* Location & Seller Info */}
+                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                      <div className="flex items-center space-x-1 truncate max-w-[140px]">
                         <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                         <span className="truncate">{item.locationDistrict}</span>
                       </div>
-                      <span>{item.postedDate}</span>
+                      <span className="font-medium truncate max-w-[110px] text-slate-700">
+                        {item.sellerName || 'Direct Farm'}
+                      </span>
                     </div>
 
                   </div>
                 </div>
 
-                {/* B2B Action Buttons / Unlock Lead Flow */}
-                <div className="p-4 pt-0">
-                  {viewerMode === 'buyer' && !isUnlocked ? (
-                    /* Locked Lead Button for Commercial Buyer */
-                    <button
-                      onClick={() => setSelectedDetailListing(item)}
-                      className="w-full bg-gradient-to-r from-amber-500 to-emerald-500 hover:from-amber-400 hover:to-emerald-400 text-slate-950 font-black text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center space-x-1.5 shadow active:scale-95 text-center"
-                    >
-                      <Lock className="w-3.5 h-3.5" />
-                      <span>Unlock Farmer Contact (Rs. 100)</span>
-                    </button>
-                  ) : (
-                    /* Unlocked or Farmer View CTA (Direct WhatsApp & Call) */
-                    <div className="grid grid-cols-2 gap-2">
-                      <a
-                        href={`https://wa.me/${displayPhone.replace(/[^0-9]/g, '')}?text=Assalam-o-Alaikum, I am interested in your AgriSaaS listing: ${encodeURIComponent(item.title)}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm active:scale-95 text-center"
-                      >
-                        <MessageCircle className="w-3.5 h-3.5" />
-                        <span>WhatsApp</span>
-                      </a>
+                {/* Direct 100% Free Actions (WhatsApp & Call) */}
+                <div className="p-3 pt-0 grid grid-cols-2 gap-2">
+                  <a
+                    href={`https://wa.me/${cleanPhone}?text=Assalam-o-Alaikum, I am interested in your AgriSaaS listing: ${encodeURIComponent(item.title)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 px-2.5 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm active:scale-95 text-center"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    <span>WhatsApp</span>
+                  </a>
 
-                      <a
-                        href={`tel:${displayPhone}`}
-                        className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center space-x-1.5 active:scale-95 text-center"
-                      >
-                        <Phone className="w-3.5 h-3.5 text-slate-600" />
-                        <span>Call</span>
-                      </a>
-                    </div>
-                  )}
+                  <a
+                    href={`tel:${actualPhone}`}
+                    className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs py-2 px-2.5 rounded-xl transition flex items-center justify-center space-x-1.5 active:scale-95 text-center"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-slate-600" />
+                    <span>Call</span>
+                  </a>
                 </div>
 
               </div>
@@ -410,20 +271,20 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) =
         </div>
 
         {/* Right: Direct Agri-Sponsor Sidebar Banners */}
-        <div className="lg:col-span-1 space-y-6">
+        <div className="lg:col-span-1 space-y-4">
           <SponsorBanner placementArea="marketplace_sidebar" variant="sidebar" />
           
-          {/* B2B Buyer Guarantee Card */}
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-5 text-white space-y-3">
-            <div className="flex items-center space-x-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+          {/* 100% Free Mandi Policy Box */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-white space-y-2.5">
+            <div className="flex items-center space-x-1.5 text-emerald-400 text-xs font-bold uppercase tracking-wider">
               <ShieldCheck className="w-4 h-4" />
-              <span>Direct Farm Guarantee</span>
+              <span>100% Free Mandi</span>
             </div>
             <h4 className="font-bold text-sm text-slate-100">
-              Verified Direct Agri Producers
+              Direct Farmer & Buyer Exchange
             </h4>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Every listing on AgriSaaS is verified through active farm registries and geolocation check-ins to prevent broker fraud.
+              No unlock fees. No commissions. Connect directly with producers for fair grain prices, livestock trades, and certified aquaculture seed.
             </p>
           </div>
         </div>
@@ -431,168 +292,24 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) =
       </div>
 
       {/* =========================================================================
-          MODAL: VIEW LISTING DETAIL & UNLOCK LEAD
+          MODAL: VIEW LISTING DETAIL
           ========================================================================= */}
       {selectedDetailListing && (
         <MarketplaceListingDetail
           listing={selectedDetailListing}
           onClose={() => setSelectedDetailListing(null)}
-          viewerMode={viewerMode}
-          buyerWallet={buyerWallet}
-          onUnlockLead={handleUnlockLead}
+          onNavigateToMyAds={onNavigateToMyAds}
         />
       )}
 
       {/* =========================================================================
-          MODAL: POST NEW B2B LISTING
+          MODAL: CREATE AD WITH REAL CAMERA PHOTO & CLIENT-SIDE COMPRESSION
           ========================================================================= */}
-      {showPostModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
-            
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
-                  <Plus className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900">Post Free Item on B2B Mandi</h3>
-                  <p className="text-[11px] text-emerald-700 font-semibold">100% Free Lifetime Listing for Farmers</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowPostModal(false)}
-                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateListing} className="space-y-4">
-              
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Listing Title *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Sahiwal Breed Milking Cow, 10,000 Rohu Fingerlings"
-                  value={newListing.title}
-                  onChange={(e) => setNewListing({ ...newListing, title: e.target.value })}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Category</label>
-                  <select
-                    value={newListing.category}
-                    onChange={(e) => setNewListing({ ...newListing, category: e.target.value as any })}
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  >
-                    <option value="crops_harvest">🌾 Harvested Crops & Grains</option>
-                    <option value="dairy_cattle">🐄 Dairy Cattle & Buffs</option>
-                    <option value="poultry_birds">🐔 Poultry Birds & Chicks</option>
-                    <option value="fish_seed">🐟 Fish Seed & Fingerlings</option>
-                    <option value="feed_silage">🌽 Silage & Animal Feed</option>
-                    <option value="machinery">🚜 Farm Machinery</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Quantity Available *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. 50 Tons, 2 Cows, 5000 Seed"
-                    value={newListing.quantity}
-                    onChange={(e) => setNewListing({ ...newListing, quantity: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Price ({symbol}) *</label>
-                  <input
-                    type="number"
-                    required
-                    min="0"
-                    placeholder="50000"
-                    value={newListing.price}
-                    onChange={(e) => setNewListing({ ...newListing, price: Number(e.target.value) })}
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">District / Location *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Sahiwal, Okara"
-                    value={newListing.locationDistrict}
-                    onChange={(e) => setNewListing({ ...newListing, locationDistrict: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Farmer Contact (Phone / WhatsApp) *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="+92 300 1234567"
-                  value={newListing.sellerPhone}
-                  onChange={(e) => setNewListing({ ...newListing, sellerPhone: e.target.value })}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Produce Image URL</label>
-                <input
-                  type="url"
-                  placeholder="https://images.unsplash.com/..."
-                  value={newListing.imageUrl}
-                  onChange={(e) => setNewListing({ ...newListing, imageUrl: e.target.value })}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Description / Quality Specs</label>
-                <textarea
-                  rows={2}
-                  placeholder="Mention moisture content, vaccination record, weight, delivery options..."
-                  value={newListing.description}
-                  onChange={(e) => setNewListing({ ...newListing, description: e.target.value })}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div className="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => setShowPostModal(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow transition"
-                >
-                  Publish Free Listing
-                </button>
-              </div>
-
-            </form>
-          </div>
-        </div>
-      )}
+      <CreateAdModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        initialCategory={selectedCategory === 'all' ? 'crops_harvest' : (selectedCategory as ListingCategory)}
+      />
 
     </div>
   );

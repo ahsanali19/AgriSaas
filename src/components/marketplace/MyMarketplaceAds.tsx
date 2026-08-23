@@ -29,8 +29,13 @@ import {
   Bird,
   Fish,
   Wheat,
-  Tractor
+  Tractor,
+  Camera,
+  Upload,
+  Zap,
+  RefreshCw
 } from 'lucide-react';
+import { compressImage, CompressedImageResult } from '../../utils/imageCompressor';
 
 interface MyMarketplaceAdsProps {
   onNavigateToExploreMarketplace?: () => void;
@@ -81,6 +86,37 @@ export const MyMarketplaceAds: React.FC<MyMarketplaceAdsProps> = ({ onNavigateTo
     locationDistrict: farm.locationDistrict || 'Sahiwal, Punjab',
     status: 'active'
   });
+
+  // Client-Side Image Compression State
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [compressionResult, setCompressionResult] = useState<CompressedImageResult | null>(null);
+  const cameraInputRef = React.useRef<HTMLInputElement>(null);
+  const galleryInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleFileProcess = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      setErrorToast('Please select a valid image file (JPEG, PNG, WebP).');
+      return;
+    }
+
+    setIsCompressing(true);
+    try {
+      const result = await compressImage(file, {
+        maxWidth: 1080,
+        maxHeight: 1080,
+        quality: 0.7,
+        maxSizeKB: 450
+      });
+      setCompressionResult(result);
+      setFormData(prev => ({ ...prev, imageUrl: result.dataUrl }));
+      setSuccessToast(`Photo compressed: ${result.originalSizeFormatted} ➔ ${result.compressedSizeFormatted} (${result.savedPercentage}% saved)`);
+      setTimeout(() => setSuccessToast(''), 4000);
+    } catch (err) {
+      setErrorToast('Failed to compress image.');
+    } finally {
+      setIsCompressing(false);
+    }
+  };
 
   // Filter listings belonging to current authenticated user
   const currentUserId = user?.id || 101;
@@ -695,17 +731,77 @@ export const MyMarketplaceAds: React.FC<MyMarketplaceAdsProps> = ({ onNavigateTo
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Image URL
-                </label>
+              {/* Photo Upload & Compression Section */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-semibold text-slate-700">
+                    Product / Animal Photo (Camera or Gallery)
+                  </label>
+                  <span className="text-[10px] text-emerald-700 font-bold">
+                    ⚡ Auto-compressed &lt;500KB
+                  </span>
+                </div>
+
                 <input
-                  type="url"
-                  value={formData.imageUrl}
-                  onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono text-xs transition"
-                  placeholder="https://images.unsplash.com/photo-..."
+                  ref={cameraInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={(e) => e.target.files?.[0] && handleFileProcess(e.target.files[0])}
+                  className="hidden"
                 />
+                <input
+                  ref={galleryInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => e.target.files?.[0] && handleFileProcess(e.target.files[0])}
+                  className="hidden"
+                />
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => cameraInputRef.current?.click()}
+                    disabled={isCompressing}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 px-3 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm"
+                  >
+                    <Camera className="w-3.5 h-3.5" />
+                    <span>Take Camera Photo</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => galleryInputRef.current?.click()}
+                    disabled={isCompressing}
+                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs py-2 px-3 rounded-xl transition flex items-center justify-center space-x-1.5"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>Upload Image</span>
+                  </button>
+                </div>
+
+                {isCompressing && (
+                  <div className="p-2 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-800 flex items-center space-x-2">
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Compressing image in browser...</span>
+                  </div>
+                )}
+
+                {formData.imageUrl && (
+                  <div className="relative rounded-xl overflow-hidden h-32 w-full bg-slate-900 border border-slate-200 mt-2">
+                    <img
+                      src={formData.imageUrl}
+                      alt="Listing preview"
+                      className="w-full h-full object-cover"
+                    />
+                    {compressionResult && (
+                      <div className="absolute top-2 left-2 bg-slate-950/80 backdrop-blur-sm text-emerald-300 text-[10px] font-mono font-bold px-2 py-0.5 rounded-md flex items-center space-x-1">
+                        <Zap className="w-3 h-3 text-emerald-400" />
+                        <span>{compressionResult.originalSizeFormatted} ➔ {compressionResult.compressedSizeFormatted}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div>

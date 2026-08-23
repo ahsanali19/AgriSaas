@@ -27,6 +27,7 @@ import { AdminDashboard } from './components/admin/AdminDashboard';
 import { ManageUsers } from './components/admin/ManageUsers';
 import { AdminTab } from './components/admin/AdminLayout';
 import { ProtectedRoute } from './components/routing/ProtectedRoute';
+import { UpdateNotification } from './components/common/UpdateNotification';
 
 function AppContent() {
   const { user, role, isAuthenticated, loginAsFarmer, loginAsAdmin } = useAuth();
@@ -233,6 +234,7 @@ export default function App() {
         <AdminProvider>
           <FarmProvider>
             <AppContent />
+            <UpdateNotification />
           </FarmProvider>
         </AdminProvider>
       </LanguageProvider>

@@ -10,7 +10,9 @@ export default defineConfig(() => {
       react(),
       tailwindcss(),
       VitePWA({
-        registerType: 'autoUpdate',
+        // Use prompt strategy so users are prompted to update with a non-intrusive banner
+        registerType: 'prompt',
+        injectRegister: 'auto',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
         manifest: {
           name: 'AgriSaaS - Smart Livestock, Poultry & Fish Farm Management',
@@ -42,6 +44,10 @@ export default defineConfig(() => {
           ],
         },
         workbox: {
+          // Automatically clean up old Workbox cache entries on update
+          cleanupOutdatedCaches: true,
+          clientsClaim: true,
+          skipWaiting: false,
           globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,json,woff2}'],
           runtimeCaching: [
             {
@@ -94,6 +100,17 @@ export default defineConfig(() => {
         },
       }),
     ],
+    // Rollup options for cache-busting: unique hash for all JS, CSS, and asset chunks
+    build: {
+      sourcemap: false,
+      rollupOptions: {
+        output: {
+          entryFileNames: 'assets/[name].[hash].js',
+          chunkFileNames: 'assets/[name].[hash].js',
+          assetFileNames: 'assets/[name].[hash].[ext]',
+        },
+      },
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
@@ -101,9 +118,7 @@ export default defineConfig(() => {
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modify—file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
-      // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
     },
   };
