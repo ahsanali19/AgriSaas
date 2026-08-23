@@ -20,7 +20,8 @@ const DEFAULT_SPONSORS: Record<PlacementArea, SponsorshipBanner[]> = {
       link: 'https://www.engrofertilizers.com',
       tagline: 'Exclusive Farmer Subsidy: Save Rs. 450 per bag on direct Engro DAP & Urea seasonal booking.',
       badgeText: 'Official Fertilizer Partner',
-      ctaText: 'Claim Subsidy Voucher'
+      ctaText: 'Claim Subsidy Voucher',
+      status: 'active'
     },
     {
       id: 2,
@@ -30,7 +31,8 @@ const DEFAULT_SPONSORS: Record<PlacementArea, SponsorshipBanner[]> = {
       link: 'https://www.nationalfeeds.com',
       tagline: 'High-Yield Cattle Wanda & Broiler Mash with 18% crude protein & free farm doorstep delivery.',
       badgeText: 'Verified Feed Partner',
-      ctaText: 'Order Wanda in Bulk'
+      ctaText: 'Order Wanda in Bulk',
+      status: 'active'
     }
   ],
   marketplace_sidebar: [
@@ -42,7 +44,8 @@ const DEFAULT_SPONSORS: Record<PlacementArea, SponsorshipBanner[]> = {
       link: 'https://www.cropscience.bayer.pk',
       tagline: 'Certified Hybrid Seeds & Protection for maximum yield per acre.',
       badgeText: 'Crop Protection Partner',
-      ctaText: 'Consult Agronomist'
+      ctaText: 'Consult Agronomist',
+      status: 'active'
     },
     {
       id: 4,
@@ -52,7 +55,8 @@ const DEFAULT_SPONSORS: Record<PlacementArea, SponsorshipBanner[]> = {
       link: 'https://www.fffl.com.pk',
       tagline: 'Guaranteed B2B Buyback Contracts for Sweetcorn, Peas & Vegetable farmers in Punjab.',
       badgeText: 'B2B Procurement Partner',
-      ctaText: 'Register Harvest Lot'
+      ctaText: 'Register Harvest Lot',
+      status: 'active'
     }
   ],
   crops_footer: [
@@ -64,7 +68,8 @@ const DEFAULT_SPONSORS: Record<PlacementArea, SponsorshipBanner[]> = {
       link: 'https://sarsabz.fatima-group.com',
       tagline: 'Sarsabz CANGOP & Nitrophos: Optimized soil nutrition for 25% extra wheat harvest.',
       badgeText: 'Soil Nutrition Partner',
-      ctaText: 'View Dosage Guide'
+      ctaText: 'View Dosage Guide',
+      status: 'active'
     }
   ],
   ledger_top: [
@@ -76,7 +81,8 @@ const DEFAULT_SPONSORS: Record<PlacementArea, SponsorshipBanner[]> = {
       link: 'https://www.hbl.com/agriculture',
       tagline: 'Solar Tube-well & Tractor Financing with subsidized markup rates for verified farmers.',
       badgeText: 'Agri Finance Partner',
-      ctaText: 'Apply for Zarai Loan'
+      ctaText: 'Apply for Zarai Loan',
+      status: 'active'
     }
   ]
 };

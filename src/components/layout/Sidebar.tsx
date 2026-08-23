@@ -3,9 +3,9 @@ import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useFarm } from '../../context/FarmContext';
 import { useAuth } from '../../context/AuthContext';
-import { LayoutDashboard, Milk, Bird, Fish, BookOpenCheck, CreditCard, Sparkles, ChevronRight, Users, ShoppingBag, Stethoscope, Tractor, Sprout } from 'lucide-react';
+import { LayoutDashboard, Milk, Bird, Fish, BookOpenCheck, CreditCard, Sparkles, ChevronRight, Users, ShoppingBag, Stethoscope, Tractor, Sprout, Tag, UserCheck } from 'lucide-react';
 
-export type NavTab = 'dashboard' | 'farms' | 'crops' | 'dairy' | 'poultry' | 'fish' | 'khata' | 'staff' | 'marketplace' | 'health' | 'subscriptions';
+export type NavTab = 'dashboard' | 'farms' | 'crops' | 'dairy' | 'poultry' | 'fish' | 'khata' | 'staff' | 'marketplace' | 'my_ads' | 'profile' | 'health' | 'subscriptions';
 
 interface SidebarProps {
   currentTab: NavTab;
@@ -50,9 +50,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab, onOpe
       quota: currentPlan.maxFishPonds !== -1 ? `${quotas.fish.current}/${quotas.fish.max}` : `${quotas.fish.current}`
     },
     { id: 'khata' as NavTab, label: t('khata'), icon: BookOpenCheck, visible: true },
+    { id: 'marketplace' as NavTab, label: 'B2B Marketplace', icon: ShoppingBag, visible: true },
+    { id: 'my_ads' as NavTab, label: 'My Posted Ads', icon: Tag, visible: true },
+    { id: 'profile' as NavTab, label: 'Farmer Profile', icon: UserCheck, visible: true },
     { id: 'health' as NavTab, label: 'Vet & AI Health', icon: Stethoscope, visible: true },
     { id: 'staff' as NavTab, label: 'Staff & Labor', icon: Users, visible: true },
-    { id: 'marketplace' as NavTab, label: 'B2B Marketplace', icon: ShoppingBag, visible: true },
     { id: 'subscriptions' as NavTab, label: t('subscriptions'), icon: CreditCard, visible: true },
   ];
 

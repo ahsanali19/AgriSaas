@@ -16,6 +16,8 @@ import { FishModule } from './components/fish/FishModule';
 import { KhataModule } from './components/khata/KhataModule';
 import { StaffManagement } from './components/staff/StaffManagement';
 import { Marketplace } from './components/marketplace/Marketplace';
+import { MyMarketplaceAds } from './components/marketplace/MyMarketplaceAds';
+import { MyProfile } from './components/profile/MyProfile';
 import { HealthAssistant } from './components/health/HealthAssistant';
 import { Login } from './components/auth/Login';
 import { AuthModal } from './components/auth/AuthModal';
@@ -165,7 +167,19 @@ function AppContent() {
             )}
 
             {currentFarmerTab === 'marketplace' && (
-              <Marketplace />
+              <Marketplace onNavigateToMyAds={() => setCurrentFarmerTab('my_ads')} />
+            )}
+
+            {currentFarmerTab === 'my_ads' && (
+              <MyMarketplaceAds
+                onNavigateToExploreMarketplace={() => setCurrentFarmerTab('marketplace')}
+              />
+            )}
+
+            {currentFarmerTab === 'profile' && (
+              <MyProfile
+                onNavigateToAds={() => setCurrentFarmerTab('my_ads')}
+              />
             )}
 
             {currentFarmerTab === 'subscriptions' && (

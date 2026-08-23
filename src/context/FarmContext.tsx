@@ -19,6 +19,7 @@ import {
   MarketplaceListing
 } from '../types';
 import { useAuth } from './AuthContext';
+import { ALL_SEED_FARMER_PROFILES, AGGREGATED_SEED_MARKETPLACE_LISTINGS } from '../data/seedData';
 
 interface FarmContextType {
   farm: Farm;
@@ -69,9 +70,12 @@ interface FarmContextType {
   updateWarehouseStock: (id: number, stock: Partial<WarehouseInventory>) => void;
   processB2BSale: (sale: Omit<B2BSale, 'id' | 'userId'>) => void;
 
-  // Marketplace Listings
+  // Marketplace Listings & Ad Management
   marketplaceListings: MarketplaceListing[];
   addMarketplaceListing: (listing: Omit<MarketplaceListing, 'id' | 'postedDate'>) => void;
+  updateMarketplaceListing: (id: number, updatedListing: Partial<MarketplaceListing>, requesterUserId?: number) => { success: boolean; message?: string };
+  deleteMarketplaceListing: (id: number, requesterUserId?: number) => { success: boolean; message?: string };
+  switchFarmerProfile: (farmerId: number) => void;
 
   // Khata & Ledgers
   khataTransactions: KhataTransaction[];
@@ -369,38 +373,41 @@ const INITIAL_KHATA: KhataTransaction[] = [
 const FarmContext = createContext<FarmContextType | undefined>(undefined);
 
 export const FarmProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { currentPlan } = useAuth();
-  const [farms, setFarms] = useState<Farm[]>(DEFAULT_FARMS);
-  const [farm, setFarm] = useState<Farm>(DEFAULT_FARMS[0]);
+  const { currentPlan, user, loginAsFarmerProfile } = useAuth();
   
-  // Dairy Livestock
-  const [dairyAnimals, setDairyAnimals] = useState<DairyAnimal[]>(INITIAL_ANIMALS);
-  const [milkLogs, setMilkLogs] = useState<MilkLog[]>(INITIAL_MILK_LOGS);
+  // Seed All 5 Farms
+  const allSeedFarms: Farm[] = ALL_SEED_FARMER_PROFILES.map(p => p.farm);
+  const [farms, setFarms] = useState<Farm[]>(allSeedFarms);
+  const [farm, setFarm] = useState<Farm>(allSeedFarms[0]);
   
-  // Poultry
-  const [poultryBatches, setPoultryBatches] = useState<PoultryBatch[]>(INITIAL_POULTRY_BATCHES);
-  const [poultryLogs, setPoultryLogs] = useState<PoultryDailyLog[]>(INITIAL_POULTRY_LOGS);
+  // Dairy Livestock (Seeded with Farmer 1: Chaudhry Aslam's 50 Cows)
+  const [dairyAnimals, setDairyAnimals] = useState<DairyAnimal[]>(ALL_SEED_FARMER_PROFILES[0].dairyAnimals);
+  const [milkLogs, setMilkLogs] = useState<MilkLog[]>(ALL_SEED_FARMER_PROFILES[0].milkLogs);
   
-  // Fish
-  const [fishPonds, setFishPonds] = useState<FishPond[]>(INITIAL_FISH_PONDS);
-  const [fishLogs, setFishLogs] = useState<FishSamplingLog[]>(INITIAL_FISH_LOGS);
+  // Poultry (Seeded with Farmer 3: Sher Khan's 5000 Broiler Flock)
+  const [poultryBatches, setPoultryBatches] = useState<PoultryBatch[]>(ALL_SEED_FARMER_PROFILES[2].poultryBatches);
+  const [poultryLogs, setPoultryLogs] = useState<PoultryDailyLog[]>(ALL_SEED_FARMER_PROFILES[2].poultryLogs);
   
-  // Crops & B2B Sales
-  const [crops, setCrops] = useState<Crop[]>(INITIAL_CROPS);
-  const [cropExpenses, setCropExpenses] = useState<CropExpense[]>(INITIAL_CROP_EXPENSES);
-  const [cropInventories, setCropInventories] = useState<CropInventory[]>(INITIAL_CROP_INVENTORY);
-  const [warehouseInventory, setWarehouseInventory] = useState<WarehouseInventory[]>(INITIAL_WAREHOUSE_INVENTORY);
-  const [b2bSales, setB2bSales] = useState<B2BSale[]>(INITIAL_B2B_SALES);
+  // Fish (Seeded with Farmer 4: Ghulam Rasool's Tilapia & Rohu Ponds)
+  const [fishPonds, setFishPonds] = useState<FishPond[]>(ALL_SEED_FARMER_PROFILES[3].fishPonds);
+  const [fishLogs, setFishLogs] = useState<FishSamplingLog[]>(ALL_SEED_FARMER_PROFILES[3].fishLogs);
+  
+  // Crops & B2B Sales (Seeded with Farmer 2: Malik Riaz's 30 Acres Wheat & Sugarcane)
+  const [crops, setCrops] = useState<Crop[]>(ALL_SEED_FARMER_PROFILES[1].crops);
+  const [cropExpenses, setCropExpenses] = useState<CropExpense[]>(ALL_SEED_FARMER_PROFILES[1].cropExpenses);
+  const [cropInventories, setCropInventories] = useState<CropInventory[]>(ALL_SEED_FARMER_PROFILES[1].cropInventories);
+  const [warehouseInventory, setWarehouseInventory] = useState<WarehouseInventory[]>(ALL_SEED_FARMER_PROFILES[1].warehouseInventory);
+  const [b2bSales, setB2bSales] = useState<B2BSale[]>(ALL_SEED_FARMER_PROFILES[1].b2bSales);
 
-  // Marketplace
-  const [marketplaceListings, setMarketplaceListings] = useState<MarketplaceListing[]>(INITIAL_MARKETPLACE_LISTINGS);
+  // Marketplace: Seeded with realistic listings from all 5 farmers
+  const [marketplaceListings, setMarketplaceListings] = useState<MarketplaceListing[]>(AGGREGATED_SEED_MARKETPLACE_LISTINGS);
 
   // Khata Ledger
-  const [khataTransactions, setKhataTransactions] = useState<KhataTransaction[]>(INITIAL_KHATA);
+  const [khataTransactions, setKhataTransactions] = useState<KhataTransaction[]>(ALL_SEED_FARMER_PROFILES[0].khataTransactions);
   const [parties] = useState<KhataParty[]>([
-    { id: 1, farmId: 1, partyName: 'Shakarganj Sugar Mills Ltd.', partyType: 'buyer_customer', currentBalance: 267988 },
-    { id: 2, farmId: 1, partyName: 'Ch. Aslam Grain Commission Agent', partyType: 'buyer_customer', currentBalance: 955500 },
-    { id: 3, farmId: 1, partyName: 'Supreme Agri Feeds', partyType: 'supplier_vendor', currentBalance: -15000 },
+    { id: 1, farmId: 101, partyName: 'Shakarganj Sugar Mills Ltd.', partyType: 'buyer_customer', currentBalance: 267988 },
+    { id: 2, farmId: 101, partyName: 'Ch. Aslam Grain Commission Agent', partyType: 'buyer_customer', currentBalance: 955500 },
+    { id: 3, farmId: 101, partyName: 'Supreme Agri Feeds', partyType: 'supplier_vendor', currentBalance: -15000 },
   ]);
 
   // =========================================================================
@@ -683,9 +690,80 @@ export const FarmProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const newListing: MarketplaceListing = {
       ...listing,
       id: Date.now(),
+      userId: listing.userId || user?.id || farm.userId || 101,
+      status: listing.status || 'active',
+      viewsCount: listing.viewsCount || 1,
+      inquiriesCount: listing.inquiriesCount || 0,
       postedDate: new Date().toISOString().split('T')[0]
     };
     setMarketplaceListings(prev => [newListing, ...prev]);
+  };
+
+  const updateMarketplaceListing = (
+    id: number,
+    updatedListing: Partial<MarketplaceListing>,
+    requesterUserId?: number
+  ): { success: boolean; message?: string } => {
+    const existing = marketplaceListings.find(l => l.id === id);
+    if (!existing) {
+      return { success: false, message: 'Marketplace listing not found.' };
+    }
+
+    // Authorization check: User can only edit their own listings
+    const authUserId = requesterUserId || user?.id;
+    if (existing.userId && authUserId && existing.userId !== authUserId) {
+      return {
+        success: false,
+        message: 'Security Alert: You are not authorized to edit listings owned by another farmer.'
+      };
+    }
+
+    setMarketplaceListings(prev =>
+      prev.map(l => (l.id === id ? { ...l, ...updatedListing } : l))
+    );
+    return { success: true };
+  };
+
+  const deleteMarketplaceListing = (
+    id: number,
+    requesterUserId?: number
+  ): { success: boolean; message?: string } => {
+    const existing = marketplaceListings.find(l => l.id === id);
+    if (!existing) {
+      return { success: false, message: 'Marketplace listing not found.' };
+    }
+
+    // Authorization check: User can only delete their own listings
+    const authUserId = requesterUserId || user?.id;
+    if (existing.userId && authUserId && existing.userId !== authUserId) {
+      return {
+        success: false,
+        message: 'Security Alert: You are not authorized to delete listings owned by another farmer.'
+      };
+    }
+
+    setMarketplaceListings(prev => prev.filter(l => l.id !== id));
+    return { success: true };
+  };
+
+  const switchFarmerProfile = (farmerId: number) => {
+    const profile = ALL_SEED_FARMER_PROFILES.find(p => p.user.id === farmerId);
+    if (!profile) return;
+
+    loginAsFarmerProfile(profile.user);
+    setFarm(profile.farm);
+    setDairyAnimals(profile.dairyAnimals);
+    setMilkLogs(profile.milkLogs);
+    setPoultryBatches(profile.poultryBatches);
+    setPoultryLogs(profile.poultryLogs);
+    setFishPonds(profile.fishPonds);
+    setFishLogs(profile.fishLogs);
+    setCrops(profile.crops);
+    setCropExpenses(profile.cropExpenses);
+    setCropInventories(profile.cropInventories);
+    setWarehouseInventory(profile.warehouseInventory);
+    setB2bSales(profile.b2bSales);
+    setKhataTransactions(profile.khataTransactions);
   };
 
   const addWarehouseStock = (stock: Omit<WarehouseInventory, 'id' | 'userId'>) => {
@@ -824,6 +902,9 @@ export const FarmProvider: React.FC<{ children: React.ReactNode }> = ({ children
     postCropHarvestToMarketplace,
     marketplaceListings,
     addMarketplaceListing,
+    updateMarketplaceListing,
+    deleteMarketplaceListing,
+    switchFarmerProfile,
     addWarehouseStock,
     updateWarehouseStock,
     processB2BSale,

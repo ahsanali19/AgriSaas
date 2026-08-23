@@ -159,9 +159,9 @@ export const Header: React.FC<HeaderProps> = ({
   }
 
   // =========================================================================
-  // 2. FARMER HEADER (Role === 'farmer')
+  // 2. FARMER HEADER (Role === 'farmer' or 'buyer')
   // =========================================================================
-  if (role === 'farmer' || (isAuthenticated && role !== 'admin')) {
+  if (role === 'farmer' || role === 'buyer') {
     return (
       <header className="sticky top-0 z-30 bg-emerald-900 text-white shadow-md border-b border-emerald-800">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -352,10 +352,14 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Farmer Profile & Logout */}
             <div className="flex items-center space-x-1.5 pl-1">
-              <div className="hidden xl:block text-right">
+              <button
+                onClick={() => onSelectFarmerTab?.('profile')}
+                className="hidden xl:block text-right hover:opacity-80 transition cursor-pointer p-1 rounded-lg"
+                title="View & Edit Farmer Profile"
+              >
                 <div className="text-xs font-semibold text-white leading-none">{user?.fullName || 'Farmer'}</div>
                 <div className="text-[10px] text-emerald-300 font-mono mt-0.5">{user?.phoneNumber}</div>
-              </div>
+              </button>
               <button
                 onClick={logout}
                 title="Logout from AgriSaaS"

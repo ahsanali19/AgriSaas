@@ -16,6 +16,8 @@ interface AuthContextType {
   login: (phoneNumber: string, pass: string) => Promise<boolean>;
   register: (data: { phoneNumber: string; fullName: string; countryCode: 'PK' | 'IN'; farmName: string }) => Promise<boolean>;
   logout: () => void;
+  updateUserProfile: (data: Partial<User>) => void;
+  loginAsFarmerProfile: (profileUser: User) => void;
   upgradePlan: (planCode: 'PRO_MONTHLY' | 'PRO_YEARLY') => void;
   switchRole: (role: UserRole | AppRole) => void;
   loginAsAdmin: () => void;
@@ -203,6 +205,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateUserProfile = (data: Partial<User>) => {
+    setUser(prev => {
+      if (!prev) return null;
+      const updated = { ...prev, ...data };
+      localStorage.setItem('agri_user', JSON.stringify(updated));
+      localStorage.setItem('agrisaas_user', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const loginAsFarmerProfile = (profileUser: User) => {
+    const sessionToken = 'farmer-jwt-' + profileUser.id;
+    setUser(profileUser);
+    setToken(sessionToken);
+    localStorage.setItem('agri_user', JSON.stringify(profileUser));
+    localStorage.setItem('agrisaas_user', JSON.stringify(profileUser));
+    localStorage.setItem('agri_token', sessionToken);
+    localStorage.setItem('agrisaas_token', sessionToken);
+  };
+
   const upgradePlan = (planCode: 'PRO_MONTHLY' | 'PRO_YEARLY') => {
     // SaaS is now 100% free lifetime
     setCurrentPlan(DEFAULT_FREE_PLAN);
@@ -257,6 +279,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         register,
         logout,
+        updateUserProfile,
+        loginAsFarmerProfile,
         upgradePlan,
         switchRole,
         loginAsAdmin,

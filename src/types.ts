@@ -210,10 +210,13 @@ export interface SalaryAdvance {
   notes?: string;
 }
 
+export type ListingCategory = 'crops_harvest' | 'dairy_cattle' | 'poultry_birds' | 'fish_seed' | 'feed_silage' | 'machinery';
+
 export interface MarketplaceListing {
   id: number;
+  userId?: number;
   title: string;
-  category: 'crops_harvest' | 'dairy_cattle' | 'poultry_birds' | 'fish_seed' | 'feed_silage' | 'machinery';
+  category: ListingCategory;
   price: number;
   currency: string;
   quantity: string;
@@ -223,6 +226,9 @@ export interface MarketplaceListing {
   imageUrl?: string;
   description: string;
   postedDate: string;
+  status?: 'active' | 'sold' | 'paused';
+  viewsCount?: number;
+  inquiriesCount?: number;
   isVerifiedFarmer?: boolean;
 }
 

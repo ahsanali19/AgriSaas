@@ -41,8 +41,9 @@ export class MarketplaceController {
         [listingId]
       );
 
-      const listing = listingRows[0] || {
+      const listing: any = listingRows[0] || {
         id: listingId,
+        farmer_id: 1,
         title: 'B2B Farm Harvest / Livestock',
         farmer_phone: '+923008472910',
         farmer_name: 'Verified Agri Producer'

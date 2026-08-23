@@ -28,7 +28,11 @@ import {
   ShieldCheck
 } from 'lucide-react';
 
-export const Marketplace: React.FC = () => {
+interface MarketplaceProps {
+  onNavigateToMyAds?: () => void;
+}
+
+export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) => {
   const { farm, marketplaceListings, addMarketplaceListing } = useFarm();
   const symbol = farm.currency === 'INR' ? '₹' : '₨';
 
@@ -168,6 +172,16 @@ export const Marketplace: React.FC = () => {
 
           {/* Action & Post Buttons */}
           <div className="flex flex-wrap items-center gap-2.5 self-start lg:self-auto">
+            {onNavigateToMyAds && (
+              <button
+                onClick={onNavigateToMyAds}
+                className="bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-4 py-3 rounded-2xl border border-white/20 transition flex items-center space-x-2 shadow"
+              >
+                <Tag className="w-4 h-4 text-emerald-400" />
+                <span>My Posted Ads</span>
+              </button>
+            )}
+
             <button
               onClick={() => setShowPostModal(true)}
               className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs px-4 py-3 rounded-2xl transition flex items-center space-x-2 shadow-lg shadow-emerald-950 active:scale-95"
