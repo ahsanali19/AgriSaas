@@ -130,51 +130,36 @@ export const HealthAssistant: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 font-sans">
+    <div className="space-y-4 font-sans">
       
-      {/* Header Banner */}
-      <div className="bg-gradient-to-r from-teal-900 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-md relative overflow-hidden">
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center space-x-2 mb-2">
-              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full flex items-center space-x-1">
-                <Sparkles className="w-3 h-3 text-emerald-400" />
-                <span>AI Clinical Veterinary Triage</span>
-              </span>
-              <span className="text-xs text-slate-400">•</span>
-              <span className="text-xs text-slate-300">Livestock & Aqua Health</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-              Farm Health & Veterinary Assistant
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl">
-              Report sick cattle, poultry flock distress, or fish pond mortalities. Get instant preliminary triage advisories, quarantine protocols, and track treatment logs.
-            </p>
+      {/* Header (Compact Modern Bar) */}
+      <div className="bg-slate-900 text-white rounded-2xl p-3.5 sm:p-4 border border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center space-x-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-teal-500/15 border border-teal-500/30 text-teal-400 flex items-center justify-center text-lg shrink-0">
+            🩺
           </div>
-
-          {/* Quick Vet Helpline */}
-          <div className="bg-slate-950/60 border border-emerald-500/30 p-4 rounded-2xl flex items-center space-x-3 text-xs self-start sm:self-auto shadow-inner">
-            <div className="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center font-bold shrink-0">
-              <Phone className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-[10px] text-slate-400 font-bold uppercase">Livestock Emergency Helpline</div>
-              <div className="font-mono font-bold text-sm text-white">0800-VET-CARE</div>
-              <div className="text-[10px] text-emerald-400">24/7 South Asia Support</div>
-            </div>
+          <div className="min-w-0">
+            <h1 className="text-base font-bold text-white tracking-tight truncate">
+              Farm Health & Vet Assistant
+            </h1>
+            <p className="text-xs text-slate-400 truncate">
+              Symptom triage, quarantine advisories, and treatment history
+            </p>
           </div>
         </div>
 
-        <div className="absolute right-0 bottom-0 opacity-10 text-9xl select-none pointer-events-none transform translate-x-8 translate-y-8">
-          🩺
+        {/* Quick Helpline Pill */}
+        <div className="bg-slate-800/80 border border-slate-700/80 px-3 py-1.5 rounded-xl flex items-center space-x-2 text-xs shrink-0 self-end sm:self-auto">
+          <Phone className="w-3.5 h-3.5 text-emerald-400" />
+          <span className="text-[11px] text-slate-300 font-medium">Helpline: <strong className="text-white font-mono">0800-VET-CARE</strong></span>
         </div>
       </div>
 
       {/* Main Grid: Clinical Form + AI Diagnosis Output */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
         {/* Left Column: Symptom Input Form */}
-        <div className="lg:col-span-7 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-5">
+        <div className="lg:col-span-7 bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm space-y-4">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">

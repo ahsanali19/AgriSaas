@@ -144,27 +144,29 @@ export const DairyModule: React.FC<DairyModuleProps> = ({ onOpenUpgrade }) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       
-      {/* Module Banner */}
-      <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center space-x-2">
-            <span className="text-2xl">🐄</span>
-            <h2 className="text-xl font-bold text-slate-900">Dairy & Livestock Herd</h2>
+      {/* Module Header (Compact Modern Bar) */}
+      <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center space-x-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-lg shrink-0 border border-blue-100">
+            🐄
           </div>
-          <p className="text-xs text-slate-500 mt-1">
-            Manage your Cow & Buffalo herd, individual ear-tags, daily shift yields, and breeding cycles.
-          </p>
+          <div className="min-w-0">
+            <h2 className="text-base font-bold text-slate-900 truncate">Dairy & Livestock Herd</h2>
+            <p className="text-xs text-slate-500 truncate">
+              Individual ear-tags, daily shift yields, and breeding cycles
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 shrink-0 self-end sm:self-auto">
           <button
             onClick={() => setShowLogMilkModal(true)}
-            className="bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs px-4 py-2.5 rounded-xl border border-blue-200 transition flex items-center space-x-1.5"
+            className="bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs px-3 py-2 rounded-xl border border-blue-200 transition flex items-center space-x-1.5"
           >
-            <Milk className="w-4 h-4" />
-            <span>Log Milk Shift</span>
+            <Milk className="w-3.5 h-3.5" />
+            <span>Log Milk</span>
           </button>
 
           <button
@@ -175,10 +177,10 @@ export const DairyModule: React.FC<DairyModuleProps> = ({ onOpenUpgrade }) => {
               setYieldLiters('12.5');
               setShowAddAnimalModal(true);
             }}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md transition flex items-center space-x-1.5"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-sm transition flex items-center space-x-1.5"
           >
-            <Plus className="w-4 h-4" />
-            <span>Add Animal ({quotas.dairy.current}/{quotas.dairy.max === -1 ? '∞' : quotas.dairy.max})</span>
+            <Plus className="w-3.5 h-3.5" />
+            <span>Add Animal</span>
           </button>
         </div>
       </div>

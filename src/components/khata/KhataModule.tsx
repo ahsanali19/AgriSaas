@@ -75,60 +75,60 @@ export const KhataModule: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       
-      {/* Khata Navigation Tabs */}
-      <div className="bg-white rounded-3xl p-2 border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center space-x-1 p-1 bg-slate-100 rounded-2xl">
+      {/* Khata Navigation Tabs (Compact Modern Bar) */}
+      <div className="bg-white rounded-2xl p-1.5 border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center space-x-1 p-1 bg-slate-100 rounded-xl">
           <button
             onClick={() => setActiveTab('cashbook')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5 ${
               activeTab === 'cashbook' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <BookOpenCheck className="w-4 h-4" />
-            <span>Master Cashbook (روزنامچہ)</span>
+            <BookOpenCheck className="w-3.5 h-3.5" />
+            <span>Master Cashbook</span>
           </button>
 
           <button
             onClick={() => setActiveTab('pnl')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5 ${
               activeTab === 'pnl' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <BarChart3 className="w-4 h-4" />
-            <span>Profit & Loss Reports (نفع و نقصان)</span>
+            <BarChart3 className="w-3.5 h-3.5" />
+            <span>Profit & Loss</span>
           </button>
 
           <button
             onClick={() => setActiveTab('parties')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5 ${
               activeTab === 'parties' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Users className="w-4 h-4" />
-            <span>Party Udhaar Book (ادھار کھاتہ)</span>
+            <Users className="w-3.5 h-3.5" />
+            <span>Party Udhaar Book</span>
           </button>
         </div>
 
         {activeTab === 'cashbook' && (
           <button
             onClick={() => setShowAddModal(true)}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md transition flex items-center space-x-1.5 self-center m-1"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl shadow-sm transition flex items-center space-x-1.5 self-center mr-1"
           >
-            <Plus className="w-4 h-4" />
-            <span>New Transaction</span>
+            <Plus className="w-3.5 h-3.5" />
+            <span>New Entry</span>
           </button>
         )}
       </div>
 
       {/* Tab 1: Cashbook */}
       {activeTab === 'cashbook' && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           
-          {/* P&L Snapshot */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-emerald-50 border border-emerald-200 rounded-3xl p-5 text-emerald-900">
+          {/* P&L Snapshot (Compact) */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="bg-emerald-50/80 border border-emerald-200/90 rounded-2xl p-3.5 text-emerald-900">
               <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-emerald-700">
                 <span>Total Farm Income</span>
                 <ArrowDownLeft className="w-4 h-4 text-emerald-600" />

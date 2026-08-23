@@ -146,87 +146,76 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) =
   });
 
   return (
-    <div className="space-y-6 font-sans">
+    <div className="space-y-4 font-sans">
       
-      {/* Header Banner */}
-      <div className="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-md relative overflow-hidden">
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full flex items-center space-x-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span>B2B Agri Mandi</span>
-              </span>
-              <span className="text-xs text-slate-400">•</span>
-              <span className="text-xs text-slate-300 font-semibold">100% Free Listing for Farmers</span>
-            </div>
-            
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-              AgriSaaS B2B Marketplace & Lead Exchange
-            </h1>
-            
-            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-              Connect verified farm producers with commercial sugar mills, grain wholesalers, feed mills, and livestock traders. Farmers post for free; commercial buyers unlock direct verified contacts.
-            </p>
+      {/* Header (Compact Modern Bar) */}
+      <div className="bg-slate-900 text-white rounded-2xl p-3.5 sm:p-4 border border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center space-x-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-lg shrink-0">
+            🚜
           </div>
-
-          {/* Action & Post Buttons */}
-          <div className="flex flex-wrap items-center gap-2.5 self-start lg:self-auto">
-            {onNavigateToMyAds && (
-              <button
-                onClick={onNavigateToMyAds}
-                className="bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-4 py-3 rounded-2xl border border-white/20 transition flex items-center space-x-2 shadow"
-              >
-                <Tag className="w-4 h-4 text-emerald-400" />
-                <span>My Posted Ads</span>
-              </button>
-            )}
-
-            <button
-              onClick={() => setShowPostModal(true)}
-              className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs px-4 py-3 rounded-2xl transition flex items-center space-x-2 shadow-lg shadow-emerald-950 active:scale-95"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Post Free Farmer Listing</span>
-            </button>
+          <div className="min-w-0">
+            <h1 className="text-base font-bold text-white tracking-tight truncate">
+              AgriSaaS B2B Marketplace Mandi
+            </h1>
+            <p className="text-xs text-slate-400 truncate">
+              Free listings for farmers • Verified buyer lead unlock
+            </p>
           </div>
         </div>
 
-        <div className="absolute right-0 bottom-0 opacity-10 text-9xl select-none pointer-events-none transform translate-x-8 translate-y-8">
-          🚜
+        {/* Action & Post Buttons */}
+        <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+          {onNavigateToMyAds && (
+            <button
+              onClick={onNavigateToMyAds}
+              className="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs px-3 py-1.5 rounded-xl border border-slate-700 transition flex items-center space-x-1.5"
+            >
+              <Tag className="w-3.5 h-3.5 text-emerald-400" />
+              <span>My Ads</span>
+            </button>
+          )}
+
+          <button
+            onClick={() => setShowPostModal(true)}
+            className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl transition flex items-center space-x-1.5 active:scale-95"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Post Ad (Free)</span>
+          </button>
         </div>
       </div>
 
       {/* =========================================================================
-          PERSPECTIVE SWITCHER & BUYER PREPAID WALLET BAR
+          PERSPECTIVE SWITCHER & BUYER PREPAID WALLET BAR (Compact)
           ========================================================================= */}
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:px-6 text-white flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-2xl p-2.5 sm:p-3 text-slate-900 flex flex-col md:flex-row md:items-center justify-between gap-2.5 shadow-sm">
         
         {/* Left: Perspective Switcher */}
-        <div className="flex items-center space-x-3">
-          <div className="text-xs font-bold text-slate-400 flex items-center space-x-1.5">
-            <Eye className="w-4 h-4 text-emerald-400" />
-            <span>Marketplace Mode:</span>
+        <div className="flex items-center space-x-2">
+          <div className="text-xs font-bold text-slate-500 flex items-center space-x-1">
+            <Eye className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Mode:</span>
           </div>
 
-          <div className="inline-flex bg-slate-800 p-1 rounded-xl border border-slate-700 text-xs font-bold">
+          <div className="inline-flex bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-semibold">
             <button
               onClick={() => setViewerMode('buyer')}
-              className={`px-3 py-1.5 rounded-lg transition flex items-center space-x-1.5 ${
+              className={`px-2.5 py-1 rounded-md transition flex items-center space-x-1 ${
                 viewerMode === 'buyer'
-                  ? 'bg-emerald-600 text-white shadow'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <Building2 className="w-3.5 h-3.5" />
-              <span>Commercial Buyer (Unlock Leads)</span>
+              <Building2 className="w-3 h-3" />
+              <span>Buyer Mode</span>
             </button>
             <button
               onClick={() => setViewerMode('farmer')}
-              className={`px-3 py-1.5 rounded-lg transition flex items-center space-x-1.5 ${
+              className={`px-2.5 py-1 rounded-md transition flex items-center space-x-1 ${
                 viewerMode === 'farmer'
-                  ? 'bg-emerald-600 text-white shadow'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <span>👨‍🌾</span>

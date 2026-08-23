@@ -145,27 +145,29 @@ export const PoultryModule: React.FC<PoultryModuleProps> = ({ onOpenUpgrade }) =
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       
-      {/* Module Banner */}
-      <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center space-x-2">
-            <span className="text-2xl">🐔</span>
-            <h2 className="text-xl font-bold text-slate-900">Poultry Flock & FCR Tracker</h2>
+      {/* Module Header (Compact Modern Bar) */}
+      <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center space-x-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-800 flex items-center justify-center text-lg shrink-0 border border-amber-100">
+            🐔
           </div>
-          <p className="text-xs text-slate-500 mt-1">
-            Broiler flock performance, mortality percentage, Feed Conversion Ratio (FCR), and egg collections.
-          </p>
+          <div className="min-w-0">
+            <h2 className="text-base font-bold text-slate-900 truncate">Poultry Flock & FCR Tracker</h2>
+            <p className="text-xs text-slate-500 truncate">
+              Broiler & Layer flocks, daily feed weight math, and mortality logs
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 shrink-0 self-end sm:self-auto">
           <button
             onClick={() => setShowLogDailyModal(true)}
-            className="bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-xs px-4 py-2.5 rounded-xl border border-amber-200 transition flex items-center space-x-1.5"
+            className="bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-xs px-3 py-2 rounded-xl border border-amber-200 transition flex items-center space-x-1.5"
           >
-            <FileText className="w-4 h-4" />
-            <span>Log Mortality & Feed</span>
+            <FileText className="w-3.5 h-3.5" />
+            <span>Log Daily</span>
           </button>
 
           <button
@@ -174,10 +176,10 @@ export const PoultryModule: React.FC<PoultryModuleProps> = ({ onOpenUpgrade }) =
               setBatchCode(`FLOCK-${new Date().getFullYear()}-B${poultryBatches.length + 1}`);
               setShowAddBatchModal(true);
             }}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md transition flex items-center space-x-1.5"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-sm transition flex items-center space-x-1.5"
           >
-            <Plus className="w-4 h-4" />
-            <span>New Batch ({quotas.poultry.current}/{quotas.poultry.max === -1 ? '∞' : quotas.poultry.max})</span>
+            <Plus className="w-3.5 h-3.5" />
+            <span>New Batch</span>
           </button>
         </div>
       </div>

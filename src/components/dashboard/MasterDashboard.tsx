@@ -21,120 +21,86 @@ export const MasterDashboard: React.FC<MasterDashboardProps> = ({ onNavigate, on
   const symbol = farm.currency === 'INR' ? '₹' : '₨';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       
-      {/* 1. Direct B2B Agri-Sponsorship Banner (Dashboard Top Placement) */}
+      {/* 1. Direct B2B Agri-Sponsorship Banner (Compact) */}
       <SponsorBanner placementArea="dashboard_top" />
 
-      {/* 2. Welcome & Farm Header */}
-      <div className="bg-gradient-to-r from-emerald-800 to-teal-900 text-white rounded-3xl p-6 sm:p-8 shadow-lg relative overflow-hidden">
-        <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center space-x-2 bg-emerald-700/80 px-3 py-1 rounded-full text-xs font-semibold text-emerald-100 mb-3 border border-emerald-600">
-            <span>📍 {farm.locationDistrict || 'Punjab, South Asia'}</span>
-            <span>•</span>
-            <span>{farm.totalAreaAcres || 25} Acres</span>
-            <span>•</span>
-            <span className="text-emerald-200">100% Free Lifetime SaaS</span>
+      {/* 2. Welcome & Farm Header (Compact Modern Bar) */}
+      <div className="bg-slate-900 text-white rounded-2xl p-3.5 sm:p-4 border border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center space-x-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-lg shrink-0">
+            🌾
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">{farm.name}</h1>
+          <div className="min-w-0">
+            <div className="flex items-center space-x-2">
+              <h1 className="text-base sm:text-lg font-bold text-white tracking-tight truncate">{farm.name}</h1>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+                Lifetime Free
+              </span>
+            </div>
+            <div className="flex items-center space-x-2 text-xs text-slate-400 mt-0.5">
+              <span>📍 {farm.locationDistrict || 'Punjab'}</span>
+              <span>•</span>
+              <span>{farm.totalAreaAcres || 25} Acres</span>
+            </div>
+          </div>
         </div>
 
-        <div className="absolute right-0 bottom-0 opacity-10 text-9xl select-none pointer-events-none transform translate-x-8 translate-y-8">
-          🌾
+        <div className="flex items-center space-x-2 shrink-0 self-end sm:self-auto">
+          <button
+            onClick={() => onNavigate('marketplace')}
+            className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2 px-3.5 rounded-xl shadow-sm transition flex items-center space-x-1.5 active:scale-95"
+          >
+            <Zap className="w-3.5 h-3.5" />
+            <span>B2B Mandi</span>
+          </button>
         </div>
       </div>
 
       {/* 3. Summary KPI Cards */}
       <StatCards />
 
-      {/* 4. 100% Free Lifetime Farmer SaaS Status Banner */}
-      <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">AgriSaaS Farmer Plan</span>
-              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center space-x-1">
-                <CheckCircle2 className="w-3 h-3" />
-                <span>100% Free Forever for Farmers</span>
-              </span>
-            </div>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Zero subscription fees. All Dairy, Poultry, Fish, Crops, and Ledger tools are fully unlocked with unlimited enterprise capacity.
-            </p>
-          </div>
-
-          <div className="flex items-center space-x-2 self-start sm:self-auto">
-            <button
-              onClick={() => onNavigate('marketplace')}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-4 rounded-xl shadow-sm transition flex items-center justify-center space-x-1.5 active:scale-95"
-            >
-              <Zap className="w-3.5 h-3.5" />
-              <span>Explore B2B Marketplace Mandi</span>
-            </button>
-          </div>
+      {/* 4. Enterprise Quick Status Strip (Compact) */}
+      <div className="bg-white rounded-2xl p-3 sm:p-3.5 border border-slate-200/90 shadow-sm grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+        <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 border border-slate-100">
+          <span className="flex items-center space-x-1.5 font-medium text-slate-700">
+            <span>🐄</span>
+            <span>Dairy Herd:</span>
+          </span>
+          <span className="font-mono font-bold text-emerald-700">
+            {quotas.dairy.current} Animals (∞)
+          </span>
         </div>
 
-        {/* Enterprise Capacity Badges */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-          
-          {/* Dairy Capacity */}
-          <div className="p-3.5 rounded-2xl bg-emerald-50/60 border border-emerald-200/80">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-700">
-              <span className="flex items-center space-x-1.5">
-                <span>🐄</span>
-                <span>Dairy Animals</span>
-              </span>
-              <span className="font-mono text-emerald-800 font-bold">
-                {quotas.dairy.current} (Unlimited ∞)
-              </span>
-            </div>
-            <div className="w-full bg-emerald-200/60 h-2 rounded-full mt-2 overflow-hidden">
-              <div className="h-full bg-emerald-600 transition-all rounded-full" style={{ width: '45%' }} />
-            </div>
-          </div>
+        <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 border border-slate-100">
+          <span className="flex items-center space-x-1.5 font-medium text-slate-700">
+            <span>🐔</span>
+            <span>Poultry Flocks:</span>
+          </span>
+          <span className="font-mono font-bold text-teal-700">
+            {quotas.poultry.current} Flocks (∞)
+          </span>
+        </div>
 
-          {/* Poultry Capacity */}
-          <div className="p-3.5 rounded-2xl bg-teal-50/60 border border-teal-200/80">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-700">
-              <span className="flex items-center space-x-1.5">
-                <span>🐔</span>
-                <span>Poultry Flocks</span>
-              </span>
-              <span className="font-mono text-teal-800 font-bold">
-                {quotas.poultry.current} (Unlimited ∞)
-              </span>
-            </div>
-            <div className="w-full bg-teal-200/60 h-2 rounded-full mt-2 overflow-hidden">
-              <div className="h-full bg-teal-600 transition-all rounded-full" style={{ width: '35%' }} />
-            </div>
-          </div>
-
-          {/* Fish Capacity */}
-          <div className="p-3.5 rounded-2xl bg-cyan-50/60 border border-cyan-200/80">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-700">
-              <span className="flex items-center space-x-1.5">
-                <span>🐟</span>
-                <span>Fish Ponds</span>
-              </span>
-              <span className="font-mono text-cyan-800 font-bold">
-                {quotas.fish.current} (Unlimited ∞)
-              </span>
-            </div>
-            <div className="w-full bg-cyan-200/60 h-2 rounded-full mt-2 overflow-hidden">
-              <div className="h-full bg-cyan-600 transition-all rounded-full" style={{ width: '40%' }} />
-            </div>
-          </div>
-
+        <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 border border-slate-100">
+          <span className="flex items-center space-x-1.5 font-medium text-slate-700">
+            <span>🐟</span>
+            <span>Fish Ponds:</span>
+          </span>
+          <span className="font-mono font-bold text-cyan-700">
+            {quotas.fish.current} Ponds (∞)
+          </span>
         </div>
       </div>
 
       {/* Main Grid: Enterprise Quick Access & Recent Financial Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         
         {/* Enterprise Operations & Recent Activity */}
         <div className="lg:col-span-2 space-y-4">
           {/* Quick Utility Shortcuts */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
             
             <div
               onClick={() => onNavigate('health')}

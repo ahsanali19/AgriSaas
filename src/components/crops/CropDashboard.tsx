@@ -189,56 +189,51 @@ export const CropDashboard: React.FC<CropDashboardProps> = ({ onNavigateToMarket
   };
 
   return (
-    <div className="space-y-6 font-sans">
-      {/* Header Banner */}
-      <div className="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-md relative overflow-hidden">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center space-x-2 mb-2">
-              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full flex items-center space-x-1">
-                <Sprout className="w-3 h-3" />
-                <span>Farmer Crops & Harvest</span>
-              </span>
-              <span className="text-xs text-slate-400">•</span>
-              <span className="text-xs text-slate-300">{farm.name || 'AgriSaaS Farm'}</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+    <div className="space-y-4 font-sans">
+      {/* Header (Compact Modern Bar) */}
+      <div className="bg-slate-900 text-white rounded-2xl p-3.5 sm:p-4 border border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex items-center space-x-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-lg shrink-0">
+            🌾
+          </div>
+          <div className="min-w-0">
+            <h1 className="text-base font-bold text-white tracking-tight truncate">
               Farmer Crops & Harvest Lifecycle
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl">
-              Track sowing to harvest, log stage-wise input expenses, and directly list your harvested yields on the B2B Marketplace with a single click.
+            <p className="text-xs text-slate-400 truncate">
+              Track sowing to harvest, log stage expenses, and list yields on Mandi
             </p>
           </div>
+        </div>
 
-          {/* Top Quick Actions */}
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => setShowAddCropModal(true)}
-              className="px-4 py-2.5 bg-white text-emerald-900 hover:bg-emerald-50 font-bold rounded-2xl text-xs shadow-md transition-all flex items-center space-x-1.5"
-            >
-              <Plus className="w-4 h-4 text-emerald-700" />
-              <span>Add New Crop</span>
-            </button>
+        {/* Quick Actions */}
+        <div className="flex flex-wrap items-center gap-2 shrink-0 self-end sm:self-auto">
+          <button
+            onClick={() => setShowAddCropModal(true)}
+            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-all flex items-center space-x-1.5"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>New Crop</span>
+          </button>
 
-            <button
-              onClick={() => setShowExpenseModal(true)}
-              className="px-4 py-2.5 bg-emerald-700/80 hover:bg-emerald-600 border border-emerald-500/40 text-white font-bold rounded-2xl text-xs transition-all flex items-center space-x-1.5"
-            >
-              <Receipt className="w-4 h-4 text-emerald-200" />
-              <span>Log Expense</span>
-            </button>
+          <button
+            onClick={() => setShowExpenseModal(true)}
+            className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold rounded-xl text-xs transition-all flex items-center space-x-1.5"
+          >
+            <Receipt className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Expense</span>
+          </button>
 
-            <button
-              onClick={() => {
-                setHarvestTargetCropId(undefined);
-                setShowHarvestModal(true);
-              }}
-              className="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold rounded-2xl text-xs shadow-md transition-all flex items-center space-x-1.5"
-            >
-              <ShoppingBag className="w-4 h-4 text-amber-100" />
-              <span>Harvest & List</span>
-            </button>
-          </div>
+          <button
+            onClick={() => {
+              setHarvestTargetCropId(undefined);
+              setShowHarvestModal(true);
+            }}
+            className="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl text-xs shadow-sm transition-all flex items-center space-x-1.5"
+          >
+            <ShoppingBag className="w-3.5 h-3.5 text-amber-100" />
+            <span>Harvest</span>
+          </button>
         </div>
       </div>
 
