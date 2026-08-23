@@ -66,7 +66,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) =
           <div className="min-w-0">
             <div className="flex items-center space-x-2">
               <h1 className="text-base font-bold text-white tracking-tight truncate">
-                GDS B2B Mandi
+                AgriSaaS B2B Mandi
               </h1>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
                 100% Free For Everyone
@@ -247,7 +247,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigateToMyAds }) =
                 {/* Direct 100% Free Actions (WhatsApp & Call) */}
                 <div className="p-3 pt-0 grid grid-cols-2 gap-2">
                   <a
-                    href={`https://wa.me/${cleanPhone}?text=Assalam-o-Alaikum, I am interested in your GDS listing: ${encodeURIComponent(item.title)}`}
+                    href={`https://wa.me/${cleanPhone}?text=Assalam-o-Alaikum, I am interested in your AgriSaaS listing: ${encodeURIComponent(item.title)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 px-2.5 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm active:scale-95 text-center"

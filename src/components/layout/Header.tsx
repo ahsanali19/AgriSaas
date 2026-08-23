@@ -98,18 +98,17 @@ export const Header: React.FC<HeaderProps> = ({
           
           {/* Superadmin Brand Identity */}
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-indigo-950/40">
-              <ShieldAlert className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-indigo-950/40">
+              <ShieldAlert className="w-5 h-5" />
             </div>
             <div>
-              <div className="flex items-center space-x-1.5">
-                <span className="font-extrabold text-sm sm:text-[15px] tracking-tight text-white">Green</span>
-                <span className="font-medium text-xs sm:text-[13px] tracking-tight text-indigo-300">Digital System</span>
-                <span className="bg-indigo-950 text-indigo-300 border border-indigo-700/80 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full tracking-wider">
-                  ADMIN
+              <div className="flex items-center space-x-2">
+                <span className="font-black text-lg tracking-tight text-white">AgriSaaS</span>
+                <span className="bg-indigo-950 text-indigo-300 border border-indigo-700/80 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full tracking-wider">
+                  SUPER ADMIN
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 font-mono hidden sm:block">
+              <p className="text-[11px] text-slate-400 font-mono hidden sm:block">
                 Master Governance Console • Base PKR
               </p>
             </div>
@@ -170,28 +169,21 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Left: Brand Identity */}
           <div className="flex items-center space-x-3">
             <div
-              className="flex items-center space-x-2.5 cursor-pointer select-none group"
+              className="flex items-center space-x-2.5 cursor-pointer"
               onClick={onOpenSetup}
               title="Click to view Farm Settings"
             >
-              <div className="w-9 h-9 rounded-xl bg-emerald-600/90 group-hover:bg-emerald-500 flex items-center justify-center shadow-inner text-white font-bold text-base shrink-0 transition">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-600 flex items-center justify-center shadow-inner text-white font-black text-xl shrink-0">
                 🌾
               </div>
               <div>
                 <div className="flex items-center space-x-1.5">
-                  {language === 'en' ? (
-                    <div className="flex items-center space-x-1">
-                      <span className="font-extrabold text-sm sm:text-[15px] tracking-tight text-white">Green</span>
-                      <span className="font-medium text-xs sm:text-[13px] tracking-tight text-emerald-300">Digital System</span>
-                    </div>
-                  ) : (
-                    <span className="font-bold text-sm sm:text-base tracking-tight text-white">{t('appName')}</span>
-                  )}
-                  <span className="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded-md bg-emerald-950/90 text-emerald-300 border border-emerald-700/70 tracking-wider">
+                  <span className="font-black text-lg tracking-tight text-white">{t('appName')}</span>
+                  <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700">
                     {farm.currency}
                   </span>
                 </div>
-                <p className="text-[11px] text-emerald-200/90 group-hover:text-white hidden sm:block truncate max-w-[160px] font-medium transition">
+                <p className="text-xs text-emerald-200 hidden sm:block truncate max-w-[160px]">
                   {farm.name}
                 </p>
               </div>
@@ -370,7 +362,7 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
               <button
                 onClick={logout}
-                title="Logout from GDS"
+                title="Logout from AgriSaaS"
                 className="p-2 rounded-xl bg-emerald-800/80 hover:bg-rose-600 hover:text-white text-emerald-200 transition"
               >
                 <LogOut className="w-4 h-4" />
@@ -391,19 +383,13 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="sticky top-0 z-30 bg-white border-b border-slate-200 text-slate-900 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
-        <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center text-white text-base shadow-sm ring-1 ring-emerald-500/20">
+        <div className="flex items-center space-x-2.5">
+          <div className="w-10 h-10 rounded-2xl bg-emerald-600 flex items-center justify-center text-white text-xl font-bold">
             🌾
           </div>
           <div>
-            <div className="flex items-center space-x-1.5">
-              <span className="font-extrabold text-sm sm:text-[15px] tracking-tight text-slate-900">Green</span>
-              <span className="font-semibold text-xs sm:text-[13px] tracking-tight text-emerald-700">Digital System</span>
-              <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 tracking-wider">
-                ERP
-              </span>
-            </div>
-            <p className="text-[10px] text-slate-400 font-medium tracking-tight">Smart Livestock, Poultry & Aqua ERP</p>
+            <span className="font-black text-lg tracking-tight text-slate-900">AgriSaaS</span>
+            <p className="text-[11px] text-slate-400">Global Livestock & Aqua Management</p>
           </div>
         </div>
 

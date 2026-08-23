@@ -43,7 +43,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, on
           </button>
           <div className="flex items-center space-x-2">
             <Sparkles className="w-6 h-6 text-amber-200" />
-            <h2 className="text-xl font-bold">GDS Pro Subscription</h2>
+            <h2 className="text-xl font-bold">AgriSaaS Pro Subscription</h2>
           </div>
           <p className="text-xs text-amber-100 mt-1">
             Remove all animal and flock limits, unlock PDF financial reports, and multi-user worker access.
@@ -96,7 +96,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, on
                 Recommended
               </div>
               <div className="flex items-center justify-between">
-                <h3 className="font-bold text-sm text-slate-900">GDS Pro</h3>
+                <h3 className="font-bold text-sm text-slate-900">AgriSaaS Pro</h3>
               </div>
               <div className="text-2xl font-black text-amber-900 mt-2">
                 {symbol} {farm.currency === 'INR' ? '499' : '1,499'} <span className="text-xs font-normal text-slate-500">/ month</span>

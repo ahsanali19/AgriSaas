@@ -158,7 +158,7 @@ export const Login: React.FC<LoginProps> = ({
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="text-white font-black text-xl tracking-tight drop-shadow-md">Green Digital System</span>
+              <span className="text-white font-black text-xl tracking-tight drop-shadow-md">AgriSaaS</span>
               <span className="bg-emerald-500/90 backdrop-blur-md text-slate-950 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full shadow-sm">
                 100% Free Kisan Plan
               </span>
@@ -450,7 +450,7 @@ export const Login: React.FC<LoginProps> = ({
           {/* Footer Registration Link */}
           <div className="mt-6 pt-5 border-t border-white/10 text-center">
             <p className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
-              Don't have a GDS farm registered yet?{' '}
+              Don't have an AgriSaaS farm registered yet?{' '}
               <button
                 type="button"
                 onClick={onNavigateRegister || (() => { loginAsFarmer(); if (onSuccess) onSuccess(); })}

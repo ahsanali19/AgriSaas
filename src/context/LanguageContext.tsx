@@ -11,7 +11,7 @@ interface Translations {
 }
 
 export const translations: Translations = {
-  appName: { en: 'Green Digital System', ur: 'گرین ڈیجیٹل سسٹم', hi: 'ग्रीन डिजिटल सिस्टम' },
+  appName: { en: 'AgriSaaS', ur: 'ایگری ساس', hi: 'एग्री सास' },
   tagline: { en: 'Livestock, Poultry & Fish Farm ERP', ur: 'ڈیری، پولٹری اور مچھلی فارم منیجر', hi: 'डेयरी, पोल्ट्री और मछली फार्म प्रबंधक' },
   dashboard: { en: 'Dashboard', ur: 'ڈیش بورڈ', hi: 'डैशबोर्ड' },
   dairy: { en: 'Dairy & Livestock', ur: 'ڈیری و لائیو اسٹاک', hi: 'डेयरी व पशुपालन' },
@@ -20,7 +20,7 @@ export const translations: Translations = {
   khata: { en: 'Master Khata (Ledger)', ur: 'کھاتہ / کیش بک', hi: 'खाता / बहीखाता' },
   subscriptions: { en: 'Subscription & Tier', ur: 'پلان اور اپ گریڈ', hi: 'सब्सक्रिप्शन प्लान' },
   freeTier: { en: 'Free Kisan Tier', ur: 'مفت کسان پلان', hi: 'मुफ्त किसान प्लान' },
-  proTier: { en: 'GDS Pro', ur: 'جی ڈی ایس پرو', hi: 'जीडीएस प्रो' },
+  proTier: { en: 'AgriSaaS Pro', ur: 'ایگری ساس پرو', hi: 'एग्री सास प्रो' },
   upgradeToPro: { en: 'Upgrade to Pro', ur: 'پرو حاصل کریں', hi: 'प्रो अपग्रेड करें' },
   totalAnimals: { en: 'Total Animals', ur: 'کل مویشی', hi: 'कुल पशु' },
   dailyMilk: { en: 'Today\'s Milk Yield', ur: 'آج کا کل دودھ', hi: 'आज का कुल दूध' },

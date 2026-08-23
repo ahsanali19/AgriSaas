@@ -486,7 +486,7 @@ export const PoultryModule: React.FC<PoultryModuleProps> = ({ onOpenUpgrade }) =
                     }}
                     className="mt-2.5 w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-xl transition"
                   >
-                    Upgrade to GDS Pro
+                    Upgrade to AgriSaaS Pro
                   </button>
                 </div>
               )}

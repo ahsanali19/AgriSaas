@@ -72,11 +72,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             <ShieldAlert className="w-5 h-5" />
           </div>
           <div>
-            <div className="flex items-center space-x-1.5">
-              <span className="font-extrabold text-sm sm:text-[15px] tracking-tight text-white">Green</span>
-              <span className="font-medium text-xs sm:text-[13px] tracking-tight text-indigo-300">Digital System</span>
-              <span className="bg-indigo-950 text-indigo-300 border border-indigo-700/60 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full tracking-wider">
-                ADMIN
+            <div className="flex items-center space-x-2">
+              <span className="font-black tracking-tight text-base text-white">AgriSaaS</span>
+              <span className="bg-indigo-950 text-indigo-300 border border-indigo-700/60 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full tracking-wider">
+                SUPER ADMIN
               </span>
             </div>
             <p className="text-[11px] text-slate-400 font-mono">Platform Governance & Multitenant Console</p>

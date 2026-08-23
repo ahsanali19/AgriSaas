@@ -45,11 +45,11 @@ export const MarketplaceListingDetail: React.FC<MarketplaceListingDetailProps> =
     if (navigator.share) {
       navigator.share({
         title: listing.title,
-        text: `Check out ${listing.title} on GDS 100% Free B2B Mandi: ${sellerPhone}`,
+        text: `Check out ${listing.title} on AgriSaaS 100% Free B2B Mandi: ${sellerPhone}`,
         url: window.location.href
       }).catch(() => {});
     } else {
-      navigator.clipboard.writeText(`${listing.title} - Contact: ${sellerPhone} - GDS Free Mandi`);
+      navigator.clipboard.writeText(`${listing.title} - Contact: ${sellerPhone} - AgriSaaS Free Mandi`);
       setSharedToast(true);
       setTimeout(() => setSharedToast(false), 2500);
     }
@@ -191,7 +191,7 @@ export const MarketplaceListingDetail: React.FC<MarketplaceListingDetailProps> =
             {/* Direct Action Buttons */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
               <a
-                href={`https://wa.me/${cleanPhoneForWhatsApp}?text=Assalam-o-Alaikum, I am contacting you regarding your GDS listing: ${encodeURIComponent(listing.title)}`}
+                href={`https://wa.me/${cleanPhoneForWhatsApp}?text=Assalam-o-Alaikum, I am contacting you regarding your AgriSaaS listing: ${encodeURIComponent(listing.title)}`}
                 target="_blank"
                 rel="noreferrer"
                 className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3 px-4 rounded-xl transition flex items-center justify-center space-x-2 shadow-md active:scale-95 text-center"
@@ -235,7 +235,7 @@ export const MarketplaceListingDetail: React.FC<MarketplaceListingDetailProps> =
         <div className="bg-slate-50 p-4 sm:px-6 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center space-x-1.5 text-emerald-700 font-medium">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>GDS 100% Free B2B Mandi</span>
+            <span>AgriSaaS 100% Free B2B Mandi</span>
           </div>
           <button
             onClick={onClose}

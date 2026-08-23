@@ -77,7 +77,7 @@ export const UpdateNotification: React.FC = () => {
             <p className="text-[11px] text-slate-400 truncate">
               {needRefresh
                 ? 'Click update to get the latest features and fixes.'
-                : 'Green Digital System is cached for full offline use.'}
+                : 'AgriSaaS is cached for full offline use.'}
             </p>
           </div>
         </div>
