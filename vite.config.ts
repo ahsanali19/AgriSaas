@@ -15,9 +15,9 @@ export default defineConfig(() => {
         injectRegister: 'auto',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
         manifest: {
-          name: 'AgriSaaS - Smart Livestock, Poultry & Fish Farm Management',
-          short_name: 'AgriSaaS',
-          description: 'Offline-capable enterprise farm management system for Dairy, Poultry, and Aquaculture in South Asia.',
+          name: 'Green Digital System - Smart Farm Management & B2B Mandi',
+          short_name: 'GDS',
+          description: 'Offline-capable enterprise farm management system for Dairy, Poultry, Crops, and Aquaculture in South Asia.',
           theme_color: '#064e3b',
           background_color: '#ffffff',
           display: 'standalone',
@@ -55,7 +55,7 @@ export default defineConfig(() => {
               urlPattern: /^https?:\/\/.*\/api\/.*/i,
               handler: 'NetworkFirst',
               options: {
-                cacheName: 'agrisaas-api-cache',
+                cacheName: 'gds-api-cache',
                 networkTimeoutSeconds: 4,
                 expiration: {
                   maxEntries: 100,

@@ -477,7 +477,7 @@ export const DairyModule: React.FC<DairyModuleProps> = ({ onOpenUpgrade }) => {
                     }}
                     className="mt-2.5 w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-xl transition"
                   >
-                    Upgrade to AgriSaaS Pro
+                    Upgrade to GDS Pro
                   </button>
                 </div>
               )}

@@ -310,7 +310,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigate }) =>
             <h1 className={`text-2xl sm:text-4xl font-black tracking-tight ${
               adminTheme === 'dark' ? 'text-white' : 'text-slate-950'
             }`}>
-              AgriSaaS Monetization Command Center
+              GDS Monetization Command Center
             </h1>
 
             <p className={`text-xs sm:text-sm leading-relaxed ${

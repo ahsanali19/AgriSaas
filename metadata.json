@@ -1,5 +1,5 @@
 {
-  "name": "AgriSaaS",
+  "name": "Green Digital System",
   "description": "Multi-enterprise farm management system for Crops, Dairy, Poultry, and Aquaculture with integrated B2B Marketplace in South Asia.",
   "requestFramePermissions": ["geolocation", "camera"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

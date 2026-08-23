@@ -156,7 +156,7 @@ export const CreateAdModal: React.FC<CreateAdModalProps> = ({
       sellerPhone: sellerPhone.trim(),
       locationDistrict: locationDistrict.trim() || 'Punjab',
       imageUrl: finalImageUrl,
-      description: description.trim() || 'Direct verified farm listing on 100% Free AgriSaaS Mandi.',
+      description: description.trim() || 'Direct verified farm listing on 100% Free GDS Mandi.',
       isVerifiedFarmer: true,
       status: 'active' as const
     };

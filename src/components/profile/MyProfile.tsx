@@ -348,7 +348,7 @@ export const MyProfile: React.FC<MyProfileProps> = ({ onNavigateToAds }) => {
               </div>
               <div>
                 <h2 className="text-base font-bold text-slate-900">Change Password</h2>
-                <p className="text-xs text-slate-500">Ensure a strong, private password for your AgriSaaS account</p>
+                <p className="text-xs text-slate-500">Ensure a strong, private password for your GDS account</p>
               </div>
             </div>
 

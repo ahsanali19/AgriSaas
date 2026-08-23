@@ -51,7 +51,7 @@ const DEMO_FARMER_USER: User = {
 const SUPER_ADMIN_USER: User = {
   id: 1,
   phoneNumber: '+92 300 0000000',
-  fullName: 'AgriSaaS Monetization Director',
+  fullName: 'GDS Monetization Director',
   countryCode: 'PK',
   role: 'admin',
   isSuperAdmin: true
@@ -73,7 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // CRITICAL FIX: If null (e.g. after logout or first visit), strictly return null.
   const [user, setUser] = useState<User | null>(() => {
     try {
-      const saved = localStorage.getItem('agri_user') || localStorage.getItem('agrisaas_user');
+      const saved = localStorage.getItem('gds_user') || localStorage.getItem('agri_user') || localStorage.getItem('agrisaas_user');
       if (saved) {
         return JSON.parse(saved);
       }
@@ -84,7 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [token, setToken] = useState<string | null>(() => {
-    return localStorage.getItem('agri_token') || localStorage.getItem('agrisaas_token') || null;
+    return localStorage.getItem('gds_token') || localStorage.getItem('agri_token') || localStorage.getItem('agrisaas_token') || null;
   });
 
   const [currentPlan, setCurrentPlan] = useState<SubscriptionPlan>(DEFAULT_FREE_PLAN);
@@ -171,6 +171,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setToken(null);
 
     // Clear all possible stored session keys
+    localStorage.removeItem('gds_user');
+    localStorage.removeItem('gds_token');
     localStorage.removeItem('agri_user');
     localStorage.removeItem('agri_token');
     localStorage.removeItem('agrisaas_user');

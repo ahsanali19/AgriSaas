@@ -63,7 +63,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           </button>
           <div className="flex items-center space-x-2">
             <span className="text-2xl">🌾</span>
-            <h2 className="text-xl font-bold">{isRegister ? 'Create AgriSaaS Account' : 'Farmer Sign In'}</h2>
+            <h2 className="text-xl font-bold">{isRegister ? 'Create GDS Account' : 'Farmer Sign In'}</h2>
           </div>
           <p className="text-xs text-emerald-200 mt-1">
             {isRegister
