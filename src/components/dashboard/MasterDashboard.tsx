@@ -131,72 +131,10 @@ export const MasterDashboard: React.FC<MasterDashboardProps> = ({ onNavigate, on
       {/* Main Grid: Enterprise Quick Access & Recent Financial Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Enterprise Modules Quick Access */}
+        {/* Enterprise Operations & Recent Activity */}
         <div className="lg:col-span-2 space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700">
-            Enterprise Module Shortcuts
-          </h3>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            
-            {/* Dairy Card */}
-            <div
-              onClick={() => onNavigate('dairy')}
-              className="cursor-pointer bg-white p-5 rounded-3xl border border-slate-200 hover:border-emerald-500 hover:shadow-md transition group"
-            >
-              <div className="w-10 h-10 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition transform">
-                🐄
-              </div>
-              <h4 className="font-bold text-base text-slate-800">Dairy & Livestock</h4>
-              <p className="text-xs text-slate-500 mt-1">
-                Individual Ear-Tag records, shift yields, and breeding/calving alerts.
-              </p>
-              <div className="mt-4 flex items-center text-xs font-bold text-emerald-700">
-                <span>Manage Herd</span>
-                <span className="ml-1 group-hover:translate-x-1 transition transform">→</span>
-              </div>
-            </div>
-
-            {/* Poultry Card */}
-            <div
-              onClick={() => onNavigate('poultry')}
-              className="cursor-pointer bg-white p-5 rounded-3xl border border-slate-200 hover:border-emerald-500 hover:shadow-md transition group"
-            >
-              <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition transform">
-                🐔
-              </div>
-              <h4 className="font-bold text-base text-slate-800">Poultry Farms</h4>
-              <p className="text-xs text-slate-500 mt-1">
-                Broiler & Layer flocks, daily feed weight math, and mortality logs.
-              </p>
-              <div className="mt-4 flex items-center text-xs font-bold text-emerald-700">
-                <span>Manage Flocks</span>
-                <span className="ml-1 group-hover:translate-x-1 transition transform">→</span>
-              </div>
-            </div>
-
-            {/* Fish Card */}
-            <div
-              onClick={() => onNavigate('fish')}
-              className="cursor-pointer bg-white p-5 rounded-3xl border border-slate-200 hover:border-emerald-500 hover:shadow-md transition group"
-            >
-              <div className="w-10 h-10 rounded-2xl bg-cyan-100 text-cyan-800 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition transform">
-                🐟
-              </div>
-              <h4 className="font-bold text-base text-slate-800">Aquaculture Ponds</h4>
-              <p className="text-xs text-slate-500 mt-1">
-                Seed stocking densities, water pH/DO sampling, and feed management.
-              </p>
-              <div className="mt-4 flex items-center text-xs font-bold text-emerald-700">
-                <span>Manage Ponds</span>
-                <span className="ml-1 group-hover:translate-x-1 transition transform">→</span>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Secondary Farm Management Shortcuts */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+          {/* Quick Utility Shortcuts */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             
             <div
               onClick={() => onNavigate('health')}
